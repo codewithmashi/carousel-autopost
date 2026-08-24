@@ -1,0 +1,82 @@
+name: Publish carousel
+
+# Fires when Claude's daily task commits a new folder under queue/.
+# Also runnable by hand from the Actions tab (useful for the first test).
+on:
+  push:
+    paths:
+      - "queue/**"
+  workflow_dispatch:
+    inputs:
+      dir:
+        description: "Queue directory to publish (blank = newest)"
+        required: false
+        default: ""
+      dry_run:
+        description: "Validate only, post nothing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # needed to commit the .published marker
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Avoid two runs racing if several commits land close together
+    concurrency:
+      group: carousel-publish
+      cancel-in-progress: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pick the queue directory
+        id: pick
+        run: |
+          DIR="${{ github.event.inputs.dir }}"
+          if [ -z "$DIR" ]; then
+            DIR=$(find queue -mindepth 1 -maxdepth 1 -type d | sort | tail -1)
+          fi
+          if [ -z "$DIR" ] || [ ! -d "$DIR" ]; then
+            echo "No queue directory found — nothing to publish."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Publishing $DIR"
+          echo "dir=$DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Skip if already published
+        id: guard
+        if: steps.pick.outputs.skip != 'true'
+        run: |
+          if [ -f "${{ steps.pick.outputs.dir }}/.published" ]; then
+            echo "Already published — skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to Buffer
+        if: steps.pick.outputs.skip != 'true' && steps.guard.outputs.skip != 'true'
+        env:
+          BUFFER_TOKEN: ${{ secrets.BUFFER_TOKEN }}
+          BUFFER_DELAY_MIN: "5"
+        run: |
+          python3 publish.py --dir "${{ steps.pick.outputs.dir }}" \
+            ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
+
+      - name: Mark as published
+        if: >
+          success() && steps.pick.outputs.skip != 'true'
+          && steps.guard.outputs.skip != 'true'
+          && github.event.inputs.dry_run != 'true'
+        run: |
+          date -u +%Y-%m-%dT%H:%M:%SZ > "${{ steps.pick.outputs.dir }}/.published"
+          git config user.name  "carousel-bot"
+          git config user.email "carousel-bot@users.noreply.github.com"
+          git add "${{ steps.pick.outputs.dir }}/.published"
+          git commit -m "mark ${{ steps.pick.outputs.dir }} published [skip ci]"
+          git push
