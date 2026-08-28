@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rebuilds — the Rebuild Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Lora:wght@400&display=swap">
+<style>
+/* ─────────────────────────────────────────────
+   Classical — carousel dialect
+   Do not invent values. Everything comes from here.
+   ───────────────────────────────────────────── */
+:root{
+  --bg:#f3f2f2; --surface:#eae9e9; --surface-warm:#f8f4f4; --ink:#211f1c;
+  --text:#201f1d;
+  --accent:#b68235; --accent-700:#7d5411; --accent-400:#e1ad66; --accent-100:#fff3e4;
+  --rule:rgba(32,31,29,.16); --rule-ink:rgba(243,242,242,.18);
+  --muted:rgba(32,31,29,.55); --muted-ink:rgba(243,242,242,.70);
+  --ghost:rgba(225,173,102,.20);
+  --radius:4px;
+
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --body:'Lora',Georgia,'Times New Roman',serif;
+
+  --W:1080px; --H:1350px; --pad:88px;
+  --hero:200px; --figure:220px; --numeral:420px;
+}
+.deck--square{ --H:1080px; --hero:160px; --figure:180px; --numeral:340px; }
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#c9c6c2}
+body{font-family:var(--body);-webkit-font-smoothing:antialiased}
+
+.deck{display:flex;flex-direction:column;align-items:center;gap:32px;padding:32px 0}
+
+.slide{
+  position:relative;overflow:hidden;flex:none;
+  width:var(--W);height:var(--H);
+  padding:var(--pad);
+  display:flex;flex-direction:column;
+  background:var(--bg);color:var(--text);
+  font-size:32px;line-height:1.5;
+}
+
+/* ── slide types ─────────────────────────── */
+.slide--paper-alt{background:var(--surface)}
+.slide--ink{background:var(--ink);color:var(--bg)}
+
+/* ── kicker rail ─────────────────────────── */
+.kicker{
+  font-family:var(--serif);font-weight:600;font-size:24px;
+  text-transform:uppercase;letter-spacing:.08em;
+  font-feature-settings:'tnum';color:var(--accent-700);
+  padding-bottom:24px;border-bottom:1px solid var(--rule);
+}
+.slide--ink .kicker{color:var(--accent-400);border-bottom-color:var(--rule-ink)}
+
+/* ── body ────────────────────────────────── */
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:64px 0;position:relative;z-index:1}
+.body--top{justify-content:flex-start;padding-top:88px}
+
+/* ── footer rail ─────────────────────────── */
+.rail{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding-top:24px;border-top:1px solid var(--rule);
+  font-size:20px;color:var(--muted);font-feature-settings:'tnum';position:relative;z-index:1;
+}
+.slide--ink .rail{border-top-color:var(--rule-ink);color:var(--muted-ink)}
+
+/* ── type roles ──────────────────────────── */
+.hero{
+  font-family:var(--serif);font-weight:400;font-size:var(--hero);
+  line-height:.92;letter-spacing:-.02em;text-transform:uppercase;margin:0;
+  white-space:nowrap;                 /* a wrapped hero word is a headline, not a hook */
+}
+.subline{
+  font-size:36px;line-height:1.45;margin:44px 0 0;max-width:26ch;
+}
+.lead{
+  font-family:var(--serif);font-weight:600;font-size:56px;line-height:1.12;
+  letter-spacing:-.015em;margin:0 0 44px;max-width:20ch;
+}
+.figure{
+  font-family:var(--serif);font-weight:400;font-size:var(--figure);
+  line-height:.9;letter-spacing:-.02em;font-feature-settings:'tnum';margin:0;
+}
+.figure-unit{font-size:32px;color:var(--muted);margin:24px 0 0;letter-spacing:.02em}
+.slide--ink .figure-unit{color:var(--muted-ink)}
+
+/* giant colophon numeral, bleeds right */
+.numeral{
+  position:absolute;right:-56px;bottom:150px;z-index:0;pointer-events:none;
+  font-family:var(--serif);font-weight:400;font-size:var(--numeral);
+  line-height:.8;color:var(--ghost);font-feature-settings:'tnum';
+}
+
+/* ── lists ───────────────────────────────── */
+.list{list-style:none;margin:0;padding:0;display:grid}
+.list li{
+  display:grid;grid-template-columns:44px 1fr;gap:24px;align-items:start;
+  padding:32px 0;border-bottom:1px solid var(--rule);font-size:34px;line-height:1.35;
+}
+.slide--ink .list li{border-bottom-color:var(--rule-ink)}
+.list li:last-child{border-bottom:0}
+.mark{color:var(--accent-700);font-family:var(--serif);font-weight:600;line-height:1.25}
+.slide--ink .mark{color:var(--accent-400)}
+.mark svg{display:block;margin-top:6px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* numbered steps */
+.steps{list-style:none;margin:0;padding:0}
+.steps li{
+  display:grid;grid-template-columns:96px 1fr;gap:32px;align-items:baseline;
+  padding:36px 0;border-bottom:1px solid var(--rule-ink);
+}
+.steps li:last-child{border-bottom:0}
+.step-n{
+  font-family:var(--serif);font-weight:400;font-size:56px;line-height:1;
+  color:var(--accent-400);font-feature-settings:'tnum';
+}
+.step-solo-n{font-family:var(--serif);font-weight:400;font-size:120px;line-height:1;
+  color:var(--accent-700);font-feature-settings:'tnum';margin:0 0 24px}
+.slide--ink .step-solo-n{color:var(--accent-400)}
+.step-label{font-family:var(--serif);font-weight:600;font-size:44px;line-height:1.12;letter-spacing:-.015em;margin:0}
+.step-note{font-size:28px;line-height:1.4;color:var(--muted-ink);margin:12px 0 0;max-width:30ch}
+
+/* ── components ──────────────────────────── */
+.tag{
+  display:inline-block;font-family:var(--serif);font-weight:600;font-size:20px;
+  text-transform:uppercase;letter-spacing:.08em;padding:12px 24px;border-radius:2px;
+  background:var(--accent-100);border:1px solid var(--accent);color:var(--accent-700);
+}
+.cta{
+  display:inline-block;font-family:var(--serif);font-weight:600;font-size:36px;
+  padding:24px 44px;border:1px solid var(--accent);border-radius:var(--radius);
+  background:transparent;color:var(--accent-400);
+}
+.slide--paper .cta,.slide--paper-alt .cta{color:var(--accent-700)}
+.keyword{font-family:var(--serif);font-weight:600;letter-spacing:.08em;color:var(--accent-400)}
+.slide--paper .keyword,.slide--paper-alt .keyword{color:var(--accent-700)}
+.note{font-size:28px;line-height:1.45;color:var(--muted);margin:44px 0 0;max-width:32ch}
+.slide--ink .note{color:var(--muted-ink)}
+.hr{height:1px;border:0;background:var(--rule);margin:44px 0}
+.slide--ink .hr{background:var(--rule-ink)}
+
+/* every photograph goes through the plate */
+.plate{border:12px solid var(--surface);outline:1px solid var(--rule);
+  filter:sepia(.22) saturate(.82) contrast(1.05);display:block;width:100%}
+
+/* ── screen preview only — never affects export ── */
+@media screen and (max-width:1200px){ .deck{zoom:.42} }
+
+/* ── print / PDF ─────────────────────────── */
+@page{ size:1080px 1350px; margin:0 }
+@media print{
+  html,body{background:#fff}
+  .deck{gap:0;padding:0;zoom:1}
+  .slide{break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- add class="deck deck--square" for 1:1 -->
+<div class="deck">
+
+<!-- ══ 01 · COVER / HOOK ══════════════════════════════════════
+     Hero = ONE uppercase word. Subline <=12 words, carrying
+     both the pain and the payoff. Slide 01 does 80% of the
+     work: it is the only one most people ever see.        ══ -->
+<section class="slide slide--paper">
+  <div class="kicker">01 / Cover</div>
+  <div class="body">
+    <h1 class="hero">REBUILDS</h1>
+    <hr class="hr">
+    <p class="subline">Your Flutter app drops frames redrawing things that never changed.</p>
+  </div>
+  <div class="rail"><span>@codewithmashi</span><span>Swipe &#8594;</span></div>
+</section>
+
+<!-- ══ 02 · PROBLEM / PAIN ════════════════════════════════════
+     Lead <=14 words, second person. 3 symptoms the reader
+     recognises from their own week.                       ══ -->
+<section class="slide slide--paper-alt">
+  <div class="kicker">02 / Problem</div>
+  <div class="body">
+    <h2 class="lead">It feels fine on your phone. Not on theirs.</h2>
+    <ul class="list">
+      <li><span class="mark">&#8594;</span><span>Scroll stutters on mid-range Android</span></li>
+      <li><span class="mark">&#8594;</span><span>Battery drains on simple lists</span></li>
+      <li><span class="mark">&#8594;</span><span>Widgets rebuilding hundreds of times</span></li>
+    </ul>
+  </div>
+  <div class="rail"><span>@codewithmashi</span><span>02 / 08</span></div>
+</section>
+
+<!-- ══ 03 · SYSTEM ════════════════════════════════════════════
+     The pivot. Name the mechanism, then let slides 04-06
+     carry one step each.                                  ══ -->
+<section class="slide slide--ink">
+  <div class="numeral">03</div>
+  <div class="kicker">03 / System</div>
+  <div class="body">
+    <h2 class="lead">The Rebuild Audit — three passes, one afternoon.</h2>
+    <p class="note">You are not optimising code. You are finding what redraws for no reason.</p>
+  </div>
+  <div class="rail"><span>@codewithmashi</span><span>03 / 08</span></div>
+</section>
+
+<!-- ══ 04 · STEP 01 ═══════════════════════════════════════════
+     One step per slide. Label is a 2-4 word imperative; the note
+     is one clarifying line. Non-obvious and startable today.  ══ -->
+<section class="slide slide--paper">
+  <div class="kicker">04 / Step 01</div>
+  <div class="body">
+    <p class="step-solo-n">01</p>
+    <h2 class="lead">Turn on the counter</h2>
+    <p class="subline">DevTools shows you exactly which widgets redraw, and how often.</p>
+  </div>
+  <div class="rail"><span>@codewithmashi</span><span>04 / 08</span></div>
+</section>
+
+<!-- ══ 05 · STEP 02 ═══════════════════════════════════════════
+     One step per slide. Label is a 2-4 word imperative; the note
+     is one clarifying line. Non-obvious and startable today.  ══ -->
+<section class="slide slide--paper-alt">
+  <div class="kicker">05 / Step 02</div>
+  <div class="body">
+    <p class="step-solo-n">02</p>
+    <h2 class="lead">Const the static</h2>
+    <p class="subline">Any widget that never changes should never be rebuilt.</p>
+  </div>
+  <div class="rail"><span>@codewithmashi</span><span>05 / 08</span></div>
+</section>
+
+<!-- ══ 06 · STEP 03 ═══════════════════════════════════════════
+     One step per slide. Label is a 2-4 word imperative; the note
+     is one clarifying line. Non-obvious and startable today.  ══ -->
+<section class="slide slide--paper">
+  <div class="kicker">06 / Step 03</div>
+  <div class="body">
+    <p class="step-solo-n">03</p>
+    <h2 class="lead">Shrink the scope</h2>
+    <p class="subline">Push setState down to the smallest widget that owns the state.</p>
+  </div>
+  <div class="rail"><span>@codewithmashi</span><span>06 / 08</span></div>
+</section>
+
+<!-- ══ 07 · PROOF / RESULT ════════════════════════════════════
+     One figure WITH unit and timeframe. Data-heavy middles
+     are what drive saves. Never fabricate a number.       ══ -->
+<section class="slide slide--paper-alt">
+  <div class="kicker">07 / Proof</div>
+  <div class="body">
+    <p class="figure">16ms</p>
+    <p class="figure-unit">the entire budget for one frame at 60fps — every needless rebuild spends part of it</p>
+    <hr class="hr">
+    <ul class="list">
+      <li><span class="mark"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></svg></span><span>Stutter you can actually locate</span></li>
+      <li><span class="mark"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></svg></span><span>No refactor, no new packages</span></li>
+      <li><span class="mark"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></svg></span><span>Works on the phones users own</span></li>
+    </ul>
+  </div>
+  <div class="rail"><span>@codewithmashi</span><span>07 / 08</span></div>
+</section>
+
+<!-- ══ 08 · CTA / JOIN ════════════════════════════════════════
+     ONE action, set by the CTA ladder in channel.md. At the
+     account's current size that is SAVE + FOLLOW. A comment
+     keyword is WRONG here. Keyword variant commented below;
+     switch at 2,000+ followers.                           ══ -->
+<section class="slide slide--ink">
+  <div class="numeral">08</div>
+  <div class="kicker">08 / Join</div>
+  <div class="body">
+    <h2 class="lead">Building mobile for a startup?</h2>
+    <p style="margin:0 0 32px"><span class="tag">Tools · 01</span></p>
+    <p class="note" style="margin-top:0">Save this for your next performance bug.</p>
+    <hr class="hr">
+    <p style="margin:0"><span class="cta">Follow <span class="keyword">@codewithmashi</span></span></p>
+    <p class="note" style="margin-top:32px">I post what breaks when you actually ship.</p>
+    <!-- 2,000+ followers only:
+    <p style="margin:0"><span class="cta">Comment <span class="keyword">YOURKEYWORD</span></span></p>
+    -->
+  </div>
+  <div class="rail"><span>@codewithmashi</span><span>08 / 08</span></div>
+</section>
+
+</div>
+
+<script>
+/* Auto-fit — shrinks the hero word and the proof figure only if they would
+   overrun the 88px margin. It never grows them past the token size, so the
+   scale stays inside the system. Runs once, before any screenshot or print. */
+(async () => {
+  if (document.fonts) { try { await document.fonts.ready; } catch {} }
+  for (const el of document.querySelectorAll('.hero, .figure')) {
+    const room = el.parentElement.clientWidth;
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    const floor = size * 0.55;
+    while (el.scrollWidth > room && size > floor) {
+      size -= 4;
+      el.style.fontSize = size + 'px';
+    }
+  }
+  document.documentElement.dataset.fitted = 'true';
+})();
+</script>
+</body>
+</html>
