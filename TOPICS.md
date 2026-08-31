@@ -12,8 +12,6 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 
 ## Queue
 
-- [ ] business · The five questions that separate a 6-week build from a 6-month one · PROOF: the questions themselves are the payload; result slide is the scoping delta
-
 - [ ] tools · Build vs buy for auth, payments and push in an MVP · PROOF: integration time vs. build time — verifiable, checkable claims about known SDKs
 
 - [ ] teardown · What founders think slows a mobile launch vs. what actually does · PROOF: before/after of where the weeks really go
@@ -21,6 +19,8 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 - [ ] business · Why fixed-price kills mobile projects, and what to quote instead · PROOF: structural — the shape of the risk, not a client number
 
 ## Done
+
+- [x] business · The five questions that separate a 6-week build from a 6-month one · slug `five-questions-six-week-build` · queued 2026-08-31 for the Mon/Wed/Fri publisher; proof is the structural scoping delta (SAME APP), not a figure
 
 - [x] business · "We'll add real-time later" — why later costs multiples of doing it once · slug `real-time-later-costs-more` · queued 2026-08-29 for the Mon/Wed/Fri publisher; proof is a structural before/after (RETROFIT), not a figure
 
