@@ -1,6 +1,0 @@
-A web page can give orders to your AI agent.
-
-Prompt injection isn't an unpatched bug — it's structural. Instructions and data arrive in the same text stream. Nothing marks where you end and the internet begins.
-
-Chatbot → bad answer.
-Agent → bad action.
