@@ -1,0 +1,90 @@
+name: Render carousel slides
+
+# Claude writes decks/<slug>/deck.html and caption.md as TEXT (via the GitHub MCP
+# server, which does not need git push access). This job turns that HTML into the
+# PNGs Instagram actually needs, and commits them to public/<slug>/.
+#
+# There is no AI in this workflow — it runs a deterministic Playwright render, so
+# the slides Claude reviewed in its own session are the bytes that ship.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'decks/**/deck.html'
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Deck slug to force re-render (blank = anything missing slides)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render-slides
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2          # enough to diff this push against its parent
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install renderer
+        run: |
+          npm install --no-save --no-fund --no-audit \
+            playwright \
+            @fontsource/archivo-black @fontsource/archivo @fontsource/archivo-narrow
+          npx playwright install --with-deps chromium
+
+      - name: Work out which decks changed
+        id: pick
+        run: |
+          if [ -n "${{ inputs.slug }}" ]; then
+            SLUGS="${{ inputs.slug }}"
+          else
+            # A deck whose slides are missing is picked up by the script itself;
+            # this catches EDITS to a deck that already has a complete slide set.
+            SLUGS=$(git diff --name-only HEAD^ HEAD -- 'decks/*/deck.html' 2>/dev/null \
+                    | awk -F/ '{print $2}' | sort -u | tr '\n' ' ' || true)
+          fi
+          echo "slugs=${SLUGS}" >> "$GITHUB_OUTPUT"
+          echo "decks to force-render: '${SLUGS}'"
+
+      - name: Render slides
+        run: node scripts/render-deck.mjs ${{ steps.pick.outputs.slugs }}
+
+      - name: Check every rendered deck has a caption
+        run: |
+          MISSING=""
+          for dir in public/*/; do
+            slug=$(basename "$dir")
+            [ -f "decks/$slug/caption.md" ] || MISSING="$MISSING $slug"
+          done
+          if [ -n "$MISSING" ]; then
+            echo "::error::no decks/<slug>/caption.md for:$MISSING — the publisher exits 1 without one, so no post would go out."
+            exit 1
+          fi
+          echo "captions present for every deck ✓"
+
+      - name: Commit slides
+        run: |
+          if [[ -z "$(git status --porcelain public/)" ]]; then
+            echo "no new slides to commit"
+            exit 0
+          fi
+          git config user.name  "carousel-bot"
+          git config user.email "actions@github.com"
+          git add public/
+          git commit -m "render: slides for${{ steps.pick.outputs.slugs && format(' {0}', steps.pick.outputs.slugs) || ' pending decks' }} [skip ci]"
+          # GITHUB_TOKEN pushes deliberately do not re-trigger workflows, so this
+          # cannot loop. Netlify watches the repo directly and still deploys.
+          git push
