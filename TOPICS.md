@@ -12,13 +12,13 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 
 ## Queue
 
-- [ ] tools · Build vs buy for auth, payments and push in an MVP · PROOF: integration time vs. build time — verifiable, checkable claims about known SDKs
-
 - [ ] teardown · What founders think slows a mobile launch vs. what actually does · PROOF: before/after of where the weeks really go
 
 - [ ] business · Why fixed-price kills mobile projects, and what to quote instead · PROOF: structural — the shape of the risk, not a client number
 
 ## Done
+
+- [x] tools · Build vs buy for auth, payments and push in an MVP · slug `build-vs-buy-auth-payments-push` · queued 2026-09-02 for the Mon/Wed/Fri publisher; proof is a structural before/after (FOREVER — integration ends, maintenance does not), not a figure
 
 - [x] business · The five questions that separate a 6-week build from a 6-month one · slug `five-questions-six-week-build` · queued 2026-08-31 for the Mon/Wed/Fri publisher; proof is the structural scoping delta (SAME APP), not a figure
 

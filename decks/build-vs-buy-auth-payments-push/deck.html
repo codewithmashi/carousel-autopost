@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rent — build vs buy for auth, payments and push</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────
+   BOLD EDITORIAL — carousel dialect
+   Two fields, one hard cut. Type is the image.
+   Small voice, loud shout.
+   ───────────────────────────────────────────── */
+:root{
+  --red:#CE2027; --cream:#F6EFD9; --ink:#14100E; --shade:#A5161C;
+  /* --blue #1B5583 is BACKDROP ONLY. Never inside a post. */
+
+  --display:'Archivo Black',Helvetica,Arial,sans-serif;
+  --narrow:'Archivo Narrow',Helvetica,Arial,sans-serif;
+  --sans:'Archivo',Helvetica,Arial,sans-serif;
+
+  --W:1080px; --H:1350px; --pad:64px;
+  --xl:150px; --l:84px; --m:56px; --numeral:150px;
+  --body:30px; --label:18px;
+}
+.deck--square{ --H:1080px; --xl:120px; --l:68px; --m:46px; --numeral:120px; }
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#1B5583}   /* deep blue: backdrop only */
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.deck{display:flex;flex-direction:column;align-items:center;gap:32px;padding:32px 0}
+
+.slide{
+  position:relative;overflow:hidden;flex:none;
+  width:var(--W);height:var(--H);padding:var(--pad);
+  display:flex;flex-direction:column;
+  font-size:var(--body);line-height:1.5;
+}
+/* alternate red-dominant and cream-dominant across the deck */
+.slide--red{background:var(--red);color:var(--cream)}
+.slide--cream{background:var(--cream);color:var(--ink)}
+
+/* ── display type: fills its block, never centered, never tracked open ── */
+.xl,.l,.m{
+  font-family:var(--display);text-transform:uppercase;
+  letter-spacing:-.03em;margin:0;
+}
+.xl{font-size:var(--xl);line-height:.82;white-space:nowrap}
+.l{font-size:var(--l);line-height:.86}
+.m{font-size:var(--m);line-height:.9}
+.slide--cream .xl,.slide--cream .l,.slide--cream .m{color:var(--red)}
+.slide--red .xl,.slide--red .l,.slide--red .m{color:var(--cream)}
+
+/* ── small voice ── */
+.label{
+  font-size:var(--label);letter-spacing:.18em;text-transform:uppercase;
+  font-weight:600;line-height:1.6;
+}
+.slide--cream .label--accent{color:var(--red)}
+
+/* ── structure ── */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px}
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:32px;padding:48px 0;min-height:0}
+.body--top{justify-content:flex-start}
+.body--end{justify-content:flex-end}
+.foot{
+  display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  font-size:var(--label);letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+}
+.foot .n{font-family:var(--narrow);font-weight:700;letter-spacing:.08em}
+
+/* ── the one 3px rule per post ── */
+.rule{height:3px;color:inherit;background:currentColor;border:0;margin:0;width:100%}
+.rule--short{width:96px;height:3px;flex:none}
+
+/* ── tri-ring mark: 3px stroke, rings overlap by a third ── */
+.rings{display:flex;flex:none}
+.rings i{width:46px;height:46px;border:3px solid currentColor;border-radius:50%;display:block}
+.rings i+i{margin-left:-15px}
+
+/* ── asterisk: never smaller than the text block beside it ── */
+.ast{font-family:var(--display);font-size:132px;line-height:.7}
+.slide--cream .ast{color:var(--red)}
+
+/* ── pills: the only rounded shapes allowed ── */
+.pill{
+  display:inline-block;border-radius:999px;padding:14px 30px;
+  font-size:var(--label);font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+}
+.pill--solid{background:var(--cream);color:var(--red)}
+.slide--cream .pill--solid{background:var(--red);color:var(--cream)}
+.pill--outline{border:2px solid currentColor}
+
+/* ── ledger list: 1px hairlines ── */
+.ledger{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.ledger li{
+  display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:baseline;
+  padding:26px 0;border-top:1px solid currentColor;font-size:34px;line-height:1.3;
+}
+.ledger li:last-child{border-bottom:1px solid currentColor}
+.ledger .k{font-family:var(--display);font-size:30px;line-height:1.2}
+.slide--cream .ledger .k{color:var(--red)}
+
+/* ── step numeral ── */
+.step-n{font-family:var(--display);font-size:var(--numeral);line-height:.8;margin:0}
+.slide--cream .step-n{color:var(--red)}
+
+/* ── the huge proof figure ── */
+.figure{font-family:var(--display);font-size:210px;line-height:.8;letter-spacing:-.04em;margin:0}
+.figure-note{font-size:26px;line-height:1.45;max-width:34ch;opacity:.92}
+
+/* echo word stack, set in the darker red shade */
+.echo{
+  position:absolute;right:-10px;top:200px;text-align:right;pointer-events:none;
+  font-family:var(--display);font-size:150px;line-height:.78;letter-spacing:-.04em;
+  color:var(--shade);text-transform:uppercase;
+}
+
+.copy{font-size:var(--body);line-height:1.5;max-width:30ch;margin:0}
+.copy--wide{max-width:38ch}
+
+@media screen and (max-width:1200px){ .deck{zoom:.42} }
+@page{ size:1080px 1350px; margin:0 }
+@media print{
+  html,body{background:#fff}
+  .deck{gap:0;padding:0;zoom:1}
+  .slide{break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ══ 01 · HOOK — red field, tri-ring, one huge word ══ -->
+<section class="slide slide--red">
+  <div class="top">
+    <div class="rings"><i></i><i></i><i></i></div>
+    <div class="label" style="text-align:right">01 / Hook<br>@codewithmashi</div>
+  </div>
+  <div class="body body--end">
+    <h1 class="xl">RENT</h1>
+    <hr class="rule">
+    <p class="copy copy--wide">Login, payments and notifications are not your product. Rent all three.</p>
+  </div>
+  <div class="foot"><span>Swipe</span><span class="n">01/08</span></div>
+</section>
+
+<!-- ══ 02 · PROBLEM — cream, red display, hairline ledger ══ -->
+<section class="slide slide--cream">
+  <div class="top"><div class="label label--accent">02 / The problem</div></div>
+  <div class="body">
+    <h2 class="l">No one picks your app for the login.</h2>
+    <ul class="ledger">
+      <li><span class="k">AUTH</span><span>Resets, lockouts, sessions, two-factor</span></li>
+      <li><span class="k">PAY</span><span>Refunds, disputes, tax, card rules</span></li>
+      <li><span class="k">PUSH</span><span>Two platforms, tokens that die quietly</span></li>
+    </ul>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span class="n">02/08</span></div>
+</section>
+
+<!-- ══ 03 · SYSTEM — red field, echo stack in the darker shade ══ -->
+<section class="slide slide--red">
+  <div class="echo">BUY<br>BUY<br>BUY</div>
+  <div class="top"><div class="label">03 / The system</div></div>
+  <div class="body">
+    <h2 class="l">Own the middle. Rent the edges.</h2>
+    <p class="copy copy--wide">Build versus buy is not a taste question. Three tests settle it before the argument starts.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span class="n">03/08</span></div>
+</section>
+
+<!-- ══ 04–06 · STEPS — one per slide, alternating fields ══ -->
+<section class="slide slide--cream">
+  <div class="top"><div class="label label--accent">04 / Test one</div></div>
+  <div class="body body--top">
+    <p class="step-n">01</p>
+    <h2 class="m">Rent anything regulated</h2>
+    <hr class="rule rule--short">
+    <p class="copy copy--wide">Card rules, tax and identity change without asking you. A vendor tracks those changes for a living. You would be doing it on evenings.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span class="n">04/08</span></div>
+</section>
+
+<section class="slide slide--red">
+  <div class="top"><div class="label">05 / Test two</div></div>
+  <div class="body body--top">
+    <p class="step-n">02</p>
+    <h2 class="m">Own what you would defend</h2>
+    <hr class="rule rule--short">
+    <p class="copy copy--wide">If a competitor copied it tomorrow and you would be furious, build it. If you would shrug, rent it.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span class="n">05/08</span></div>
+</section>
+
+<section class="slide slide--cream">
+  <div class="top"><div class="label label--accent">06 / Test three</div></div>
+  <div class="body body--top">
+    <p class="step-n">03</p>
+    <h2 class="m">Price the exit first</h2>
+    <hr class="rule rule--short">
+    <p class="copy copy--wide">Before you sign, ask what leaving costs. Can you export your users and their history? If the answer is vague, that is the real price.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span class="n">06/08</span></div>
+</section>
+
+<!-- ══ 07 · PROOF — red field, figure as the image ══ -->
+<section class="slide slide--red">
+  <div class="top"><div class="label">07 / The real difference</div></div>
+  <div class="body body--end">
+    <p class="figure" style="white-space:nowrap">FOREVER</p>
+    <hr class="rule">
+    <p class="figure-note">Integration finishes. Maintenance does not. Rented plumbing is the only part of your app someone else keeps fixing after launch.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span class="n">07/08</span></div>
+</section>
+
+<!-- ══ 08 · CTA — cream, solid pill, one asterisk ══ -->
+<section class="slide slide--cream">
+  <div class="top">
+    <div class="label label--accent">08 / Save this</div>
+    <div class="ast">&#10033;</div>
+  </div>
+  <div class="body">
+    <h2 class="l">Build or buy?</h2>
+    <hr class="rule rule--short">
+    <p class="copy copy--wide">Save this and run the three tests before you sign anything.</p>
+    <p style="margin:0"><span class="pill pill--solid">Follow @codewithmashi</span></p>
+    <p class="copy copy--wide" style="font-size:26px">I build mobile for startups and post what actually breaks.</p>
+  </div>
+  <div class="foot"><span>Tools 01</span><span class="n">08/08</span></div>
+</section>
+
+</div>
+
+<script>
+/* Archivo Black is very wide — a long hero word will overrun the frame.
+   Shrink only what would overflow; never grow past the token size. */
+(async () => {
+  if (document.fonts) { try { await document.fonts.ready; } catch {} }
+  for (const el of document.querySelectorAll('.xl, .figure')) {
+    const room = el.parentElement.clientWidth;
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    const floor = size * 0.45;
+    while (el.scrollWidth > room && size > floor) { size -= 4; el.style.fontSize = size + 'px'; }
+  }
+  document.documentElement.dataset.fitted = 'true';
+})();
+</script>
+</body>
+</html>
