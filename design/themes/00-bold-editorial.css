@@ -1,0 +1,23 @@
+/* 00 — BOLD EDITORIAL   the incumbent: four posts already live in this look
+   @fonts archivo-black:400 archivo:400,500,600,700 archivo-narrow:600,700 */
+:root{
+  --field-a:#CE2027; --on-a:#F6EFD9;
+  --field-b:#F6EFD9; --on-b:#14100E;
+  --accent:#CE2027;  --on-accent:#F6EFD9;
+
+  --display-face:'Archivo Black',Helvetica,sans-serif; --display-weight:400;
+  --display-transform:uppercase; --display-tracking:-.03em; --display-lh:.86;
+  --display-on-a:#F6EFD9; --display-on-b:#CE2027; --display-on-accent:#F6EFD9;
+
+  /* the original had no second voice; a quiet italic keeps the published
+     look intact while making the device available */
+  --aside-face:'Archivo',Helvetica,sans-serif; --aside-style:italic; --aside-weight:500;
+  --meta-face:'Archivo',Helvetica,sans-serif; --meta-weight:600; --meta-tracking:.18em;
+  --body-face:'Archivo',Helvetica,sans-serif;
+
+  --accent-on-a:#F6EFD9; --accent-on-b:#CE2027; --accent-on-accent-field:#F6EFD9;
+  --highlight:#F6EFD9; --highlight-ink:#CE2027;
+  --echo-color:#A5161C; --echo-top:150px;
+  --pill-bg:#CE2027; --pill-ink:#F6EFD9;
+  --underline-weight:5px; --rule-weight:3px; --hairline:1px;
+}

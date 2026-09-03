@@ -98,6 +98,13 @@ body{-webkit-font-smoothing:antialiased}
 .ledger li:last-child{border-bottom:var(--hairline,1px) solid currentColor}
 .ledger .k{font-family:var(--ledger-k-face,var(--display-face));font-weight:var(--display-weight,900);font-size:30px;line-height:1.2;color:var(--accent-on-field,inherit)}
 
+/* accent marks read differently on each field — red numerals on cream,
+   cream numerals on red. Themes may set --accent-on-a/-b/-accent; if they
+   don't, they fall back to --accent-on-field then to the field's text colour. */
+.slide[data-field="a"] .ledger .k,.slide[data-field="a"] .step-n,.slide[data-field="a"] .ast{color:var(--accent-on-a,var(--accent-on-field,inherit))}
+.slide[data-field="b"] .ledger .k,.slide[data-field="b"] .step-n,.slide[data-field="b"] .ast{color:var(--accent-on-b,var(--accent-on-field,inherit))}
+.slide[data-field="accent"] .ledger .k,.slide[data-field="accent"] .step-n,.slide[data-field="accent"] .ast{color:var(--accent-on-accent-field,var(--accent-on-field,inherit))}
+
 /* step numeral */
 .step-n{font-family:var(--display-face);font-weight:var(--display-weight,900);font-size:var(--numeral,150px);line-height:.8;margin:0;color:var(--accent-on-field,inherit)}
 
