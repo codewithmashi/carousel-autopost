@@ -1,4 +1,4 @@
-/* ─────────────────────────────────────────────────────────────
+/* ────────────────────────────────────────────────────────────
    TEXTURE — the "cut, don't render" layer.
 
    Every reference system is physical: halftone dots, paper grain,
@@ -6,7 +6,7 @@
    so all of it can be generated. A theme opts in per surface.
 
    Everything here is pure CSS/SVG — no image files, no network.
-   ───────────────────────────────────────────────────────────── */
+   ─────────────────────────────────────────────────────────── */
 
 /* ── film / photocopy grain ──
    feTurbulence at high frequency, overlaid at low alpha. Reads as
@@ -23,8 +23,10 @@
 /* ── halftone dots ──
    A dot screen, the way a scanned newspaper reproduces a flat tint.
    Size and angle are tokens so a theme can coarsen or rotate it. */
+/* inset must exceed what the rotation costs: at -20% a wide, short element
+   (a tile, a panel) shows bare corners where the rotated screen runs out. */
 .tx-halftone::before{
-  content:"";position:absolute;inset:-20%;pointer-events:none;z-index:1;
+  content:"";position:absolute;inset:-45%;pointer-events:none;z-index:1;
   opacity:var(--halftone-opacity,.22);
   transform:rotate(var(--halftone-angle,15deg));
   background-image:radial-gradient(var(--halftone-ink,#111) var(--halftone-dot,2.2px),transparent var(--halftone-dot,2.2px));
