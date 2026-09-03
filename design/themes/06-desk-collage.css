@@ -13,7 +13,7 @@
   --meta-face:'Archivo',Helvetica,sans-serif; --meta-weight:700; --meta-tracking:.2em;
   --body-face:'Archivo',Helvetica,sans-serif;
 
-  --accent-on-field:#E2571E;
+  --accent-on-field:#E2571E; --accent-hand:#E2571E;
   --highlight:#E2571E; --highlight-ink:#FFFFFF;
   --echo-color:#262626; --echo-top:150px;
   --pill-bg:#E2571E; --pill-ink:#FFFFFF; --pill-radius:0;

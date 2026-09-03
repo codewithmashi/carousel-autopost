@@ -1,0 +1,38 @@
+/* 01 — ACID EDITORIAL : composition + components.
+   Spec rules: "Type is the image" · "Headlines may bleed off one edge only"
+   · "Two voices per post" · "Cut, don't render." */
+
+.ae-slide{justify-content:space-between}
+
+/* headline allowed to run past the right edge — the one permitted bleed */
+.ae-bleed{margin-right:-120px}
+.ae-head{font-family:var(--display-face);font-weight:400;text-transform:uppercase;
+  letter-spacing:-.045em;line-height:.84;margin:0;font-size:132px}
+.ae-head--sm{font-size:88px;line-height:.88}
+
+/* sticker aside — boxed italic serif, rotated, white fill */
+.ae-sticker{display:inline-block;background:#fff;color:#111;border:3px solid #111;
+  padding:20px 26px;font-family:var(--aside-face);font-style:italic;font-size:40px;
+  line-height:1.2;transform:rotate(-1.6deg);box-shadow:5px 6px 0 rgba(17,17,17,.18);max-width:78%}
+
+/* ink tag — black box, acid mono text, bottom corner, never centred */
+.ae-tag{display:inline-block;background:#111;color:var(--accent);
+  font-family:var(--meta-face);font-size:20px;letter-spacing:.18em;
+  text-transform:uppercase;padding:14px 22px}
+
+/* ink panel — solid black block, max one per layout */
+.ae-panel{background:#111;color:var(--accent);padding:44px 40px}
+.ae-panel h2{font-family:var(--display-face);font-weight:400;text-transform:uppercase;
+  font-size:74px;line-height:.9;letter-spacing:-.04em;margin:0;color:var(--accent)}
+.ae-panel p{font-size:28px;line-height:1.5;margin:22px 0 0;color:#F2F0E6;opacity:.9}
+
+/* marker highlight — one phrase per layout, bleeding 8px each side */
+.ae-hl{background:var(--accent);color:#111;box-shadow:10px 0 0 var(--accent),-10px 0 0 var(--accent)}
+
+/* dot-leader annotation — hand-placed, scattered */
+.ae-note{display:flex;align-items:center;gap:14px;font-size:30px}
+.ae-note::before{content:"";width:11px;height:11px;background:currentColor;border-radius:50%;flex:none}
+.ae-note span{border-bottom:2px solid currentColor;font-weight:600}
+
+/* mono meta stack */
+.ae-meta{font-family:var(--meta-face);font-size:19px;letter-spacing:.2em;text-transform:uppercase;line-height:1.7}

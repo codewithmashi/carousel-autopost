@@ -1,0 +1,104 @@
+/* ─────────────────────────────────────────────────────────────
+   TEXTURE — the "cut, don't render" layer.
+
+   Every reference system is physical: halftone dots, paper grain,
+   torn edges, tape, photocopy contrast. None of it is a photograph,
+   so all of it can be generated. A theme opts in per surface.
+
+   Everything here is pure CSS/SVG — no image files, no network.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── film / photocopy grain ──
+   feTurbulence at high frequency, overlaid at low alpha. Reads as
+   paper tooth on light fields and sensor noise on dark ones. */
+.tx-grain::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  opacity:var(--grain-opacity,.14);
+  mix-blend-mode:var(--grain-blend,multiply);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:300px 300px;
+}
+.slide[data-field="a"].tx-grain::after{mix-blend-mode:var(--grain-blend-a,var(--grain-blend,multiply))}
+
+/* ── halftone dots ──
+   A dot screen, the way a scanned newspaper reproduces a flat tint.
+   Size and angle are tokens so a theme can coarsen or rotate it. */
+.tx-halftone::before{
+  content:"";position:absolute;inset:-20%;pointer-events:none;z-index:1;
+  opacity:var(--halftone-opacity,.22);
+  transform:rotate(var(--halftone-angle,15deg));
+  background-image:radial-gradient(var(--halftone-ink,#111) var(--halftone-dot,2.2px),transparent var(--halftone-dot,2.2px));
+  background-size:var(--halftone-gap,11px) var(--halftone-gap,11px);
+}
+
+/* a halftone that fades — dense at one edge, gone at the other */
+.tx-halftone--fade::before{
+  -webkit-mask-image:linear-gradient(var(--halftone-fade,200deg),#000 0%,transparent 62%);
+  mask-image:linear-gradient(var(--halftone-fade,200deg),#000 0%,transparent 62%);
+}
+
+/* ── torn paper edge ──
+   An irregular polygon along the bottom. Not a clean rectangle —
+   the whole point of a scrap is that it was ripped. */
+.tx-torn{
+  clip-path:polygon(
+    0% 0%, 100% 0%, 100% 93%,
+    96% 96%, 92% 92%, 88% 97%, 84% 93%, 80% 98%, 76% 94%, 72% 97%,
+    68% 92%, 64% 96%, 60% 93%, 56% 98%, 52% 94%, 48% 97%, 44% 93%,
+    40% 96%, 36% 92%, 32% 97%, 28% 93%, 24% 98%, 20% 94%, 16% 96%,
+    12% 92%, 8% 97%, 4% 94%, 0% 96%
+  );
+}
+.tx-torn--top{
+  clip-path:polygon(
+    0% 5%, 4% 2%, 8% 6%, 12% 3%, 16% 7%, 20% 2%, 24% 6%, 28% 3%,
+    32% 7%, 36% 3%, 40% 6%, 44% 2%, 48% 6%, 52% 3%, 56% 7%, 60% 2%,
+    64% 6%, 68% 3%, 72% 7%, 76% 2%, 80% 6%, 84% 3%, 88% 7%, 92% 2%,
+    96% 5%, 100% 3%, 100% 100%, 0% 100%
+  );
+}
+
+/* ── tape strip ── */
+.tx-tape{position:relative}
+.tx-tape::before{
+  content:"";position:absolute;top:-16px;left:var(--tape-x,58px);
+  width:var(--tape-w,160px);height:36px;
+  background:var(--tape-ink,rgba(30,30,30,.86));
+  transform:rotate(var(--tape-rot,-2.5deg));
+  z-index:3;
+}
+
+/* ── duotone photo treatment ──
+   Wrap an <img> in .tx-duo: it is crushed to greyscale, then the
+   theme's two inks are mapped over it. Same recipe every reference
+   uses to make stock photography look like it belongs. */
+.tx-duo{position:relative;overflow:hidden;isolation:isolate}
+.tx-duo img{display:block;width:100%;height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(var(--duo-contrast,1.25)) brightness(var(--duo-brightness,.95))}
+.tx-duo::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:var(--duo-light,#F2F0E6);mix-blend-mode:lighten;
+}
+.tx-duo::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:var(--duo-dark,#111);mix-blend-mode:darken;
+}
+
+/* high-contrast photocopy: blows midtones out, keeps only black and paper */
+.tx-xerox img{filter:grayscale(1) contrast(2.4) brightness(1.08)}
+
+/* ── ink bleed / offset misregistration ──
+   The accent colour printed a hair off from the black plate. */
+.tx-offset{position:relative}
+.tx-offset::before{
+  content:attr(data-echo);position:absolute;left:var(--offset-x,6px);top:var(--offset-y,5px);
+  color:var(--offset-ink,var(--accent));z-index:-1;pointer-events:none;
+  font:inherit;letter-spacing:inherit;text-transform:inherit;white-space:pre-wrap;
+}
+
+/* ── hairline register marks, the corner furniture of print ── */
+.tx-crop{position:absolute;width:26px;height:26px;pointer-events:none;opacity:var(--crop-opacity,.5)}
+.tx-crop--tl{top:30px;left:30px;border-top:2px solid currentColor;border-left:2px solid currentColor}
+.tx-crop--tr{top:30px;right:30px;border-top:2px solid currentColor;border-right:2px solid currentColor}
+.tx-crop--bl{bottom:30px;left:30px;border-bottom:2px solid currentColor;border-left:2px solid currentColor}
+.tx-crop--br{bottom:30px;right:30px;border-bottom:2px solid currentColor;border-right:2px solid currentColor}
