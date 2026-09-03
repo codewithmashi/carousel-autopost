@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deck template — themed</title>
+<!-- Structure never changes. Swap the theme link to restyle the whole deck.
+     scripts/render-deck.mjs rewrites the theme href and inlines the fonts. -->
+<link rel="stylesheet" href="../../design/base.css">
+<link rel="stylesheet" href="../../design/themes/01-acid-editorial.css" id="theme">
+</head>
+<body>
+<div class="deck">
+
+<!-- ══ 01 · HOOK — one huge word, plus the second voice ══ -->
+<section class="slide" data-field="accent">
+  <div class="top">
+    <div class="rings"><i></i><i></i><i></i></div>
+    <div class="label" style="text-align:right">01 / Hook<br>@codewithmashi</div>
+  </div>
+  <div class="body body--end">
+    <h1 class="xl">FIVE</h1>
+    <hr class="rule">
+    <p class="copy copy--wide">Five questions decide whether your app takes six weeks or six months. <span class="aside" style="font-size:1.35em">but does anyone ask them?</span></p>
+  </div>
+  <div class="foot"><span>Swipe</span><span>01/08</span></div>
+</section>
+
+<!-- ══ 02 · PROBLEM — hairline ledger ══ -->
+<section class="slide" data-field="b">
+  <div class="top"><div class="label">02 / The problem</div></div>
+  <div class="body">
+    <h2 class="l">Nobody <span class="ul">plans</span> a six-month build.</h2>
+    <ul class="ledger">
+      <li><span class="k">01</span><span>The quote covers what you described</span></li>
+      <li><span class="k">02</span><span>The delay comes from what you assumed</span></li>
+      <li><span class="k">03</span><span>Nobody asked, so nobody priced it</span></li>
+    </ul>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span>02/08</span></div>
+</section>
+
+<!-- ══ 03 · SYSTEM — watermark glyph behind the headline ══ -->
+<section class="slide" data-field="a">
+  <div class="echo">FIVE<br>FIVE<br>FIVE</div>
+  <div class="top"><div class="label">03 / The system</div></div>
+  <div class="body">
+    <h2 class="l">Ask all five before you sign.</h2>
+    <p class="copy copy--wide">None of them are technical. Each one either stays a small answer, or quietly becomes a month nobody put in the plan.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span>03/08</span></div>
+</section>
+
+<!-- ══ 04–06 · THE QUESTIONS ══ -->
+<section class="slide" data-field="b">
+  <div class="top"><div class="label">04 / Question one</div></div>
+  <div class="body body--top">
+    <p class="step-n">01</p>
+    <h2 class="m">Where does the data <span class="hot">already live?</span></h2>
+    <hr class="rule rule--short">
+    <p class="copy copy--wide">If the answer is "someone else's system", you are not building a screen. You are negotiating an integration, on their timeline.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span>04/08</span></div>
+</section>
+
+<section class="slide" data-field="a">
+  <div class="top"><div class="label">05 / Questions two &amp; three</div></div>
+  <div class="body body--top">
+    <p class="step-n" style="font-size:88px">02</p>
+    <h2 class="m">How many kinds of user?</h2>
+    <p class="copy copy--wide">One kind is a login. Three kinds is a permissions system, and every screen has to know the difference.</p>
+    <hr class="rule">
+    <p class="step-n" style="font-size:88px">03</p>
+    <h2 class="m">Anything happening while the app is closed?</h2>
+    <p class="copy copy--wide">Reminders, sync, anything on a schedule. That is a server, not a screen.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span>05/08</span></div>
+</section>
+
+<section class="slide" data-field="b">
+  <div class="top"><div class="label">06 / Questions four &amp; five</div></div>
+  <div class="body body--top">
+    <p class="step-n" style="font-size:88px">04</p>
+    <h2 class="m">Does money move inside the app?</h2>
+    <p class="copy copy--wide">Payments bring refunds, receipts, tax and app-store rules with them. None of that is the payment screen.</p>
+    <hr class="rule">
+    <p class="step-n" style="font-size:88px">05</p>
+    <h2 class="m">Who fixes it when it goes wrong?</h2>
+    <p class="copy copy--wide">Somebody needs a way to refund, unblock and correct. That admin surface is a second product.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span>06/08</span></div>
+</section>
+
+<!-- ══ 07 · PROOF — the figure is the image ══ -->
+<section class="slide" data-field="a">
+  <div class="top"><div class="label">07 / The difference</div></div>
+  <div class="body body--end">
+    <p class="figure">SAME APP</p>
+    <hr class="rule">
+    <p class="figure-note">Before: five answers, given in an hour, priced into the plan. After: the same five, found one at a time, each one already halfway into the build. Same app — a different calendar.</p>
+  </div>
+  <div class="foot"><span>@codewithmashi</span><span>07/08</span></div>
+</section>
+
+<!-- ══ 08 · CTA — save + follow, never a comment keyword ══ -->
+<section class="slide" data-field="b">
+  <div class="top">
+    <div class="label">08 / Save this</div>
+    <div class="ast">&#10033;</div>
+  </div>
+  <div class="body">
+    <h2 class="l">Scoping a mobile build?</h2>
+    <hr class="rule rule--short">
+    <p class="copy copy--wide">Save this and ask all five before you sign anything.</p>
+    <p style="margin:0"><span class="pill">Follow @codewithmashi</span></p>
+    <p class="copy copy--wide" style="font-size:26px">I build mobile for startups and post what actually breaks.</p>
+  </div>
+  <div class="foot"><span>Business 02</span><span>08/08</span></div>
+</section>
+
+</div>
+
+<script>
+/* "Type is the image": the hero word and the proof figure FILL their column.
+   Grow as well as shrink — a short word must not sit small in a big field. */
+(async () => {
+  if (document.fonts) { try { await document.fonts.ready; } catch {} }
+  for (const el of document.querySelectorAll('.xl, .figure')) {
+    const room = el.parentElement.clientWidth;
+    const max = parseFloat(getComputedStyle(el).getPropertyValue('--fit-max')) ||
+                (el.classList.contains('xl') ? 330 : 230);
+    // shrink-wrap the box first: a block element's scrollWidth can never fall
+    // below its parent, so measuring it would report "already full" and the
+    // grow loop would never run.
+    el.style.width = 'max-content';
+    const w = () => el.getBoundingClientRect().width;
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    while (w() < room && size < max) { size += 4; el.style.fontSize = size + 'px'; }
+    while (w() > room && size > 40)  { size -= 2; el.style.fontSize = size + 'px'; }
+  }
+  document.documentElement.dataset.fitted = 'true';
+})();
+</script>
+</body>
+</html>

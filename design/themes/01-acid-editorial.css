@@ -1,0 +1,21 @@
+/* 01 — ACID EDITORIAL   ref @estudiomona.co
+   @fonts archivo-black:400 archivo:400,600,700 instrument-serif:400i space-mono:400,700 */
+:root{
+  --field-a:#E8E559; --on-a:#111111;
+  --field-b:#F2F0E6; --on-b:#111111;
+  --accent:#E8E559;  --on-accent:#111111;
+
+  --display-face:'Archivo Black',Helvetica,sans-serif; --display-weight:400;
+  --display-transform:uppercase; --display-tracking:-.045em; --display-lh:.86;
+  --display-on-a:#111111; --display-on-b:#111111; --display-on-accent:#111111;
+
+  --aside-face:'Instrument Serif',Georgia,serif; --aside-style:italic;
+  --meta-face:'Space Mono',monospace; --meta-weight:400; --meta-tracking:.2em;
+  --body-face:'Archivo',Helvetica,sans-serif;
+
+  --accent-on-field:#111111;
+  --highlight:#E8E559; --highlight-ink:#111111;
+  --echo-color:#DCD94A; --echo-top:150px;
+  --pill-bg:#111111; --pill-ink:#E8E559;
+  --underline-weight:6px; --rule-weight:3px; --hairline:1.5px;
+}

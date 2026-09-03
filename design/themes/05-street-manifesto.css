@@ -1,0 +1,26 @@
+/* 05 — STREET MANIFESTO   ref *al tacho
+   @fonts permanent-marker:400 archivo:400,500,600,700 */
+:root{
+  --field-a:#E8381A; --on-a:#1E1B18;
+  --field-b:#F4F1E8; --on-b:#1E1B18;
+  --accent:#E8381A;  --on-accent:#1E1B18;
+
+  --display-face:'Permanent Marker',cursive; --display-weight:400;
+  --display-transform:none; --display-tracking:0; --display-lh:.95;
+  --display-on-a:#1E1B18; --display-on-b:#1E1B18; --display-on-accent:#1E1B18;
+
+  --aside-face:'Archivo',Helvetica,sans-serif; --aside-style:normal; --aside-weight:500;
+  --aside-transform:uppercase;
+  --meta-face:'Archivo',Helvetica,sans-serif; --meta-weight:600; --meta-tracking:.24em;
+  --body-face:'Archivo',Helvetica,sans-serif;
+
+  --accent-on-field:#E8381A;
+  --highlight:#E8381A; --highlight-ink:#F4F1E8;
+  /* outlined glyph watermark, not a solid echo */
+  --echo-color:transparent; --echo-stroke:4px; --echo-stroke-color:rgba(244,241,232,.45);
+  --echo-size:150px; --echo-top:40px; --echo-stroke:2px;
+  --pill-bg:#1E1B18; --pill-ink:#F4F1E8; --pill-radius:0;
+  --underline-weight:5px; --rule-weight:3px; --hairline:2px;
+  --ledger-k-face:"Archivo",Helvetica,sans-serif;
+  --xl:130px; --figure:150px;
+}

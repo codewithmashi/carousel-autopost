@@ -1,0 +1,21 @@
+/* 02 — STUDIO MARKER   ref die ende®
+   @fonts anton:400 archivo:400,600,700 permanent-marker:400 */
+:root{
+  --field-a:#FFFFFF; --on-a:#111111;
+  --field-b:#D9D9D9; --on-b:#111111;
+  --accent:#FFC800;  --on-accent:#111111;
+
+  --display-face:'Anton',Helvetica,sans-serif; --display-weight:400;
+  --display-transform:uppercase; --display-tracking:-.01em; --display-lh:.94;
+  --display-on-a:#111111; --display-on-b:#111111; --display-on-accent:#111111;
+
+  --aside-face:'Permanent Marker',cursive; --aside-style:normal;
+  --meta-face:'Archivo',Helvetica,sans-serif; --meta-weight:700; --meta-tracking:.22em;
+  --body-face:'Archivo',Helvetica,sans-serif;
+
+  --accent-on-field:#111111;
+  --highlight:#F2F02F; --highlight-ink:#111111;
+  --echo-color:#E4E4E4; --echo-top:150px;
+  --pill-bg:#111111; --pill-ink:#FFC800;
+  --underline-weight:5px; --rule-weight:2px; --hairline:1px;
+}

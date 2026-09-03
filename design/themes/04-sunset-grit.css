@@ -1,0 +1,21 @@
+/* 04 — SUNSET GRIT   ref SMM Los Angeles
+   @fonts anton:400 barlow-condensed:500,600,700 permanent-marker:400 archivo:400 */
+:root{
+  --field-a:#0C0C0C; --on-a:#F2F2F2;
+  --field-b:#F5F3F0; --on-b:#141414;
+  --accent:#F03A17;  --on-accent:#0C0C0C;
+
+  --display-face:'Anton',Helvetica,sans-serif; --display-weight:400;
+  --display-transform:uppercase; --display-tracking:-.01em; --display-lh:.9;
+  --display-on-a:#F2F2F2; --display-on-b:#141414; --display-on-accent:#0C0C0C;
+
+  --aside-face:'Permanent Marker',cursive; --aside-style:normal; --aside-skew:skewX(-6deg);
+  --meta-face:'Barlow Condensed',Helvetica,sans-serif; --meta-weight:600; --meta-tracking:.2em;
+  --body-face:'Barlow Condensed',Helvetica,sans-serif; --body-size:32px;
+
+  --accent-on-field:#F03A17;
+  --highlight:#F03A17; --highlight-ink:#0C0C0C;
+  --echo-color:#161616; --echo-top:150px;
+  --pill-bg:#F03A17; --pill-ink:#0C0C0C; --pill-radius:0;
+  --underline-weight:6px; --rule-weight:3px; --hairline:1px;
+}

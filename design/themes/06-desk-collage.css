@@ -1,0 +1,22 @@
+/* 06 — DESK COLLAGE   ref @olyacooper
+   @fonts archivo:400,500,600,700 caveat:500,600 */
+:root{
+  --field-a:#1E1E1E; --on-a:#F2F2F2;
+  --field-b:#DED3C4; --on-b:#1E1E1E;
+  --accent:#4C7C86;  --on-accent:#FFFFFF;
+
+  --display-face:'Archivo',Helvetica,sans-serif; --display-weight:700;
+  --display-transform:uppercase; --display-tracking:-.02em; --display-lh:1.06;
+  --display-on-a:#F2F2F2; --display-on-b:#1E1E1E; --display-on-accent:#FFFFFF;
+
+  --aside-face:'Caveat',cursive; --aside-style:normal; --aside-weight:600;
+  --meta-face:'Archivo',Helvetica,sans-serif; --meta-weight:700; --meta-tracking:.2em;
+  --body-face:'Archivo',Helvetica,sans-serif;
+
+  --accent-on-field:#E2571E;
+  --highlight:#E2571E; --highlight-ink:#FFFFFF;
+  --echo-color:#262626; --echo-top:150px;
+  --pill-bg:#E2571E; --pill-ink:#FFFFFF; --pill-radius:0;
+  --underline-weight:4px; --rule-weight:2px; --hairline:1px;
+  --xl:130px; --l:74px; --figure:150px;
+}

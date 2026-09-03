@@ -1,0 +1,22 @@
+/* 03 — VISTTO MONO   ref @vistto.online
+   @fonts barlow-condensed:500,700 archivo:400,600,700 */
+:root{
+  --field-a:#0B0B0B; --on-a:#F4F4F2;
+  --field-b:#F4F4F2; --on-b:#111111;
+  --accent:#2B5CE6;  --on-accent:#FFFFFF;
+
+  --display-face:'Barlow Condensed',Helvetica,sans-serif; --display-weight:700;
+  --display-transform:uppercase; --display-tracking:.005em; --display-lh:.95;
+  --display-on-a:#F4F4F2; --display-on-b:#111111; --display-on-accent:#FFFFFF;
+
+  --aside-face:'Archivo',Helvetica,sans-serif; --aside-style:italic; --aside-weight:600;
+  --meta-face:'Archivo',Helvetica,sans-serif; --meta-weight:600; --meta-tracking:.26em;
+  --body-face:'Archivo',Helvetica,sans-serif;
+
+  --accent-on-field:#2B5CE6;
+  --highlight:#F4F4F2; --highlight-ink:#111111;
+  --echo-color:#161616; --echo-top:150px;
+  --pill-bg:#2B5CE6; --pill-ink:#FFFFFF; --pill-radius:34px 34px 34px 8px;
+  --underline-weight:4px; --rule-weight:1px; --hairline:1px;
+  --xl:170px;
+}

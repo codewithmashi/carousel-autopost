@@ -1,0 +1,144 @@
+/* ─────────────────────────────────────────────────────────────
+   CAROUSEL BASE — the skeleton. Never changes between themes.
+   Every visual choice here reads from a --token that a theme file
+   in design/themes/ supplies. Structure is fixed; look is swapped.
+
+   Frame is locked to 1080x1350 (4:5). Instagram carousels must be
+   one ratio throughout, and scripts/render-deck.mjs asserts it.
+   ───────────────────────────────────────────────────────────── */
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#2A2A2A}
+body{-webkit-font-smoothing:antialiased}
+
+.deck{display:flex;flex-direction:column;align-items:center;gap:32px;padding:32px 0}
+
+.slide{
+  position:relative;overflow:hidden;flex:none;
+  width:1080px;height:1350px;padding:var(--pad,78px);
+  display:flex;flex-direction:column;
+  font-family:var(--body-face);
+  font-size:var(--body-size,30px);line-height:1.5;
+}
+
+/* ── fields: every slide is one of three ── */
+.slide[data-field="a"]{background:var(--field-a);color:var(--on-a)}
+.slide[data-field="b"]{background:var(--field-b);color:var(--on-b)}
+.slide[data-field="accent"]{background:var(--accent);color:var(--on-accent)}
+
+/* ── display type ── */
+.xl,.l,.m{
+  font-family:var(--display-face);
+  font-weight:var(--display-weight,900);
+  text-transform:var(--display-transform,uppercase);
+  letter-spacing:var(--display-tracking,-.03em);
+  line-height:var(--display-lh,.88);
+  margin:0;
+}
+.xl{font-size:var(--xl,150px);white-space:nowrap}
+.l{font-size:var(--l,84px)}
+.m{font-size:var(--m,56px)}
+
+.slide[data-field="a"] .xl,.slide[data-field="a"] .l,.slide[data-field="a"] .m{color:var(--display-on-a)}
+.slide[data-field="b"] .xl,.slide[data-field="b"] .l,.slide[data-field="b"] .m{color:var(--display-on-b)}
+.slide[data-field="accent"] .xl,.slide[data-field="accent"] .l,.slide[data-field="accent"] .m{color:var(--display-on-accent)}
+
+/* ── the second voice: serif italic, brush, or handwriting ── */
+.aside{
+  font-family:var(--aside-face);
+  font-style:var(--aside-style,italic);
+  font-weight:var(--aside-weight,400);
+  text-transform:var(--aside-transform,none);
+  transform:var(--aside-skew,none);
+  display:inline-block;
+  line-height:1.1;
+}
+
+/* ── meta: labels, handle, page numbers ── */
+.label,.foot{
+  font-family:var(--meta-face);
+  font-size:var(--meta-size,20px);
+  font-weight:var(--meta-weight,600);
+  letter-spacing:var(--meta-tracking,.18em);
+  text-transform:uppercase;
+  line-height:1.6;
+}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px}
+.foot{display:flex;justify-content:space-between;align-items:baseline;gap:24px}
+
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:34px;padding:52px 0;min-height:0}
+.body--top{justify-content:flex-start}
+.body--end{justify-content:flex-end}
+
+.copy{font-size:var(--body-size,30px);line-height:1.5;max-width:34ch;margin:0}
+.copy--wide{max-width:40ch}
+
+/* ── rules ── */
+.rule{height:var(--rule-weight,3px);background:currentColor;border:0;margin:0;width:100%}
+.rule--short{width:120px;flex:none}
+
+/* ── COMPONENTS — each theme decides which it uses ── */
+
+/* highlight block (acid, studio-marker) */
+.hl{background:var(--highlight);color:var(--highlight-ink);box-shadow:8px 0 0 var(--highlight),-8px 0 0 var(--highlight)}
+
+/* underline the pivot word */
+.ul{text-decoration:underline;text-decoration-thickness:var(--underline-weight,5px);text-underline-offset:6px}
+
+/* accent-coloured word inside a neutral headline (sunset, street, desk) */
+.hot{color:var(--accent)}
+
+/* hairline ledger list */
+.ledger{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.ledger li{
+  display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:baseline;
+  padding:28px 0;border-top:var(--hairline,1px) solid currentColor;
+  font-size:var(--ledger-size,34px);line-height:1.3;
+}
+.ledger li:last-child{border-bottom:var(--hairline,1px) solid currentColor}
+.ledger .k{font-family:var(--ledger-k-face,var(--display-face));font-weight:var(--display-weight,900);font-size:30px;line-height:1.2;color:var(--accent-on-field,inherit)}
+
+/* step numeral */
+.step-n{font-family:var(--display-face);font-weight:var(--display-weight,900);font-size:var(--numeral,150px);line-height:.8;margin:0;color:var(--accent-on-field,inherit)}
+
+/* the proof figure */
+.figure{font-family:var(--display-face);font-weight:var(--display-weight,900);font-size:var(--figure,190px);line-height:.82;letter-spacing:-.04em;margin:0;white-space:nowrap;text-transform:var(--display-transform,uppercase)}
+.figure-note{font-size:26px;line-height:1.45;max-width:36ch;opacity:.92}
+
+/* echo / watermark glyph behind the composition */
+.echo{
+  position:absolute;right:-10px;top:var(--echo-top,150px);text-align:right;pointer-events:none;
+  font-family:var(--display-face);font-weight:var(--display-weight,900);
+  font-size:var(--echo-size,150px);line-height:.78;letter-spacing:-.04em;
+  text-transform:var(--display-transform,uppercase);
+  color:var(--echo-color);
+  -webkit-text-stroke:var(--echo-stroke,0) var(--echo-stroke-color,transparent);
+}
+
+/* pill / tag for the CTA */
+.pill{
+  display:inline-block;border-radius:var(--pill-radius,999px);padding:16px 34px;
+  font-family:var(--meta-face);font-size:var(--meta-size,20px);font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  background:var(--pill-bg);color:var(--pill-ink);
+}
+
+/* tri-ring mark */
+.rings{display:flex;flex:none}
+.rings i{width:52px;height:52px;border:3px solid currentColor;border-radius:50%;display:block}
+.rings i+i{margin-left:-17px}
+
+/* asterisk */
+.ast{font-family:var(--display-face);font-size:140px;line-height:.7;color:var(--accent-on-field,inherit)}
+
+/* circled phrase (desk-collage, street-manifesto) */
+.circled{position:relative;display:inline-block}
+.circled svg{position:absolute;left:-14px;top:-10px;width:calc(100% + 30px);height:calc(100% + 22px);overflow:visible}
+
+@page{size:1080px 1350px;margin:0}
+@media print{
+  html,body{background:#fff}
+  .deck{gap:0;padding:0}
+  .slide{break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide:last-child{break-after:auto;page-break-after:auto}
+}
