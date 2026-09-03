@@ -224,7 +224,11 @@ const all = existsSync(DECKS)
 const pending = all.filter(s => !complete(s));
 const todo = [...new Set([...asked, ...pending])].filter(s => all.includes(s));
 
-const unknown = asked.filter(s => !all.includes(s));
+// CI derives slugs from a git diff, which can name scaffolding such as
+// decks/_template. Those are not decks; skip them rather than failing the run.
+const scaffold = asked.filter(s => s.startsWith('_'));
+if (scaffold.length) console.log(`ignoring scaffolding: ${scaffold.join(', ')}`);
+const unknown = asked.filter(s => !s.startsWith('_') && !all.includes(s));
 if (unknown.length) throw new Error(`no such deck(s): ${unknown.join(', ')}`);
 
 if (!todo.length) {
