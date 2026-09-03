@@ -1,0 +1,24 @@
+# Active themes, in rotation order. One line per theme, blank lines and
+# # comments ignored.
+#
+# A theme belongs here ONLY once it has all three parts:
+#   design/themes/<name>.css      tokens
+#   design/layouts/<name>.css     composition + components
+#   design/templates/<name>.html  structure
+#
+# A theme with only tokens is a recolour of another theme's layout, not a
+# design system. scripts/pick-theme.mjs refuses to select one.
+#
+# Rotation is monthly, not per post: a look needs roughly a dozen posts to
+# register. Selection is derived from the calendar month, so there is no
+# state to advance and nothing to drift.
+
+01-acid-editorial
+06-desk-collage
+03-vistto-mono
+
+# Not yet composed — tokens only. Do not add until each has a template:
+#   00-bold-editorial
+#   02-studio-marker
+#   04-sunset-grit
+#   05-street-manifesto

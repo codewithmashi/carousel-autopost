@@ -18,6 +18,7 @@
 import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
+import { tmpdir } from 'node:os';
 import process from 'node:process';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
@@ -41,8 +42,34 @@ async function loadChromium() {
   }
 }
 
+// ── themed decks ──
+// A deck built from design/templates/ links base.css, texture.css, its theme
+// and its layout by relative path. Those must be inlined for the same reason
+// the fonts are: the renderer loads the file over file:// and CI has no
+// stylesheet server. Returns '' for a legacy self-contained deck.
+function themeCss(html, deckDir) {
+  const hrefs = [...html.matchAll(/<link[^>]*href="([^"]+\.css)"/g)].map(m => m[1]);
+  if (!hrefs.length) return { css: '', theme: null };
+  let css = '', theme = null;
+  for (const href of hrefs) {
+    // resolve relative to the deck itself first (decks/<slug>/deck.html), then
+    // to design/templates/ so a template renders in place during development
+    const candidates = [
+      path.resolve(deckDir, href),
+      path.resolve(ROOT, 'design/templates', href),
+      path.join(ROOT, 'design', path.basename(href)),
+    ];
+    const found = candidates.find(existsSync);
+    if (!found) throw new Error(`deck links a stylesheet that does not exist: ${href}`);
+    css += readFileSync(found, 'utf8') + '\n';
+    const m = found.match(/design\/themes\/([^/]+)\.css$/);
+    if (m) theme = m[1];
+  }
+  return { css, theme };
+}
+
 // ── @font-face block, woff2 base64-inlined ──
-function fontFaces() {
+function fontFaces(only) {
   const roots = [
     path.join(ROOT, 'node_modules/@fontsource'),
     '/home/claude/node_modules/@fontsource',
@@ -50,6 +77,26 @@ function fontFaces() {
   ];
   const dir = roots.find(existsSync);
   if (!dir) throw new Error('@fontsource packages not found — npm install them first');
+
+  // a themed deck declares exactly the faces it needs; a legacy deck gets the
+  // original Bold Editorial set
+  if (only) {
+    const out = [];
+    for (const spec of only.trim().split(/\s+/)) {
+      const [pkg, weights] = spec.split(':');
+      for (const w of weights.split(',')) {
+        const italic = w.endsWith('i');
+        const wt = italic ? w.slice(0, -1) : w;
+        const style = italic ? 'italic' : 'normal';
+        const fam = pkg.split('-').map(x => x[0].toUpperCase() + x.slice(1)).join(' ');
+        const f = path.join(dir, pkg, 'files', `${pkg}-latin-${wt}-${style}.woff2`);
+        if (!existsSync(f)) throw new Error(`theme needs ${pkg} ${wt} ${style}, not installed`);
+        out.push(`@font-face{font-family:'${fam}';font-style:${style};font-weight:${wt};`
+               + `font-display:block;src:url(data:font/woff2;base64,${readFileSync(f).toString('base64')}) format('woff2');}`);
+      }
+    }
+    return out.join('\n');
+  }
 
   const faces = [
     ['Archivo Black', 400, 'archivo-black/files/archivo-black-latin-400-normal.woff2'],
@@ -84,9 +131,24 @@ async function renderDeck(browser, fontCss, slug) {
   let html = readFileSync(deckPath, 'utf8')
     .replace(/<link[^>]*fonts\.(googleapis|gstatic)\.com[^>]*>\s*/g, '');
   if (/fonts\.(googleapis|gstatic)/.test(html)) throw new Error('Google Fonts reference survived stripping');
-  html = html.replace('<style>', `<style>\n${fontCss}\n`);
 
-  const tmp = path.join(ROOT, `.render-${slug}.html`);
+  const { css, theme } = themeCss(html, path.dirname(deckPath));
+  if (theme) {
+    // themed deck: inline its stylesheets and only the faces its theme declares
+    const themeSrc = readFileSync(path.join(ROOT, 'design/themes', `${theme}.css`), 'utf8');
+    const m = themeSrc.match(/@fonts ([^*]+)/);
+    if (!m) throw new Error(`${theme}.css declares no @fonts`);
+    html = html
+      .replace(/<link rel="stylesheet"[^>]*>\s*/g, '')
+      .replace('</head>', `<style>\n${fontFaces(m[1])}\n${css}\n</style></head>`);
+    console.log(`  theme: ${theme}`);
+  } else {
+    html = html.replace('<style>', `<style>\n${fontCss}\n`);
+  }
+
+  // scratch goes to the system temp dir, never the repo: these files carry
+  // megabytes of base64 fonts and were being committed
+  const tmp = path.join(tmpdir(), `render-${slug}-${process.pid}.html`);
   writeFileSync(tmp, html);
 
   // viewport MUST exceed 1200px or the deck's own @media rule zooms it to 42%
@@ -156,7 +218,8 @@ async function renderDeck(browser, fontCss, slug) {
 
 const asked = process.argv.slice(2).filter(a => a && !a.startsWith('-'));
 const all = existsSync(DECKS)
-  ? readdirSync(DECKS, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name)
+  // '_'-prefixed folders are scaffolding (decks/_template), not publishable decks
+  ? readdirSync(DECKS, { withFileTypes: true }).filter(d => d.isDirectory() && !d.name.startsWith('_')).map(d => d.name)
   : [];
 const pending = all.filter(s => !complete(s));
 const todo = [...new Set([...asked, ...pending])].filter(s => all.includes(s));
@@ -171,7 +234,7 @@ if (!todo.length) {
 console.log(`rendering: ${todo.join(', ')}`);
 
 const chromium = await loadChromium();
-const fontCss = fontFaces();
+const fontCss = (() => { try { return fontFaces(); } catch { return ''; } })();
 const browser = await chromium.launch(
   process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}
 );
