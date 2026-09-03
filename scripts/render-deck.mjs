@@ -68,6 +68,26 @@ function themeCss(html, deckDir) {
   return { css, theme };
 }
 
+// ── parse a theme's `@fonts pkg:weights ...` declaration into face specs ──
+// `400i` means italic. Family name is the package name title-cased, which is
+// how @fontsource names them ('barlow-condensed' → 'Barlow Condensed').
+function parseFonts(only) {
+  const out = [];
+  for (const spec of only.trim().split(/\s+/)) {
+    const [pkg, weights] = spec.split(':');
+    for (const w of weights.split(',')) {
+      const italic = w.endsWith('i');
+      const weight = italic ? w.slice(0, -1) : w;
+      out.push({
+        pkg, weight, italic,
+        style: italic ? 'italic' : 'normal',
+        family: pkg.split('-').map(x => x[0].toUpperCase() + x.slice(1)).join(' '),
+      });
+    }
+  }
+  return out;
+}
+
 // ── @font-face block, woff2 base64-inlined ──
 function fontFaces(only) {
   const roots = [
@@ -81,21 +101,12 @@ function fontFaces(only) {
   // a themed deck declares exactly the faces it needs; a legacy deck gets the
   // original Bold Editorial set
   if (only) {
-    const out = [];
-    for (const spec of only.trim().split(/\s+/)) {
-      const [pkg, weights] = spec.split(':');
-      for (const w of weights.split(',')) {
-        const italic = w.endsWith('i');
-        const wt = italic ? w.slice(0, -1) : w;
-        const style = italic ? 'italic' : 'normal';
-        const fam = pkg.split('-').map(x => x[0].toUpperCase() + x.slice(1)).join(' ');
-        const f = path.join(dir, pkg, 'files', `${pkg}-latin-${wt}-${style}.woff2`);
-        if (!existsSync(f)) throw new Error(`theme needs ${pkg} ${wt} ${style}, not installed`);
-        out.push(`@font-face{font-family:'${fam}';font-style:${style};font-weight:${wt};`
-               + `font-display:block;src:url(data:font/woff2;base64,${readFileSync(f).toString('base64')}) format('woff2');}`);
-      }
-    }
-    return out.join('\n');
+    return parseFonts(only).map(({ pkg, weight, style, family }) => {
+      const f = path.join(dir, pkg, 'files', `${pkg}-latin-${weight}-${style}.woff2`);
+      if (!existsSync(f)) throw new Error(`theme needs ${pkg} ${weight} ${style}, not installed`);
+      return `@font-face{font-family:'${family}';font-style:${style};font-weight:${weight};`
+           + `font-display:block;src:url(data:font/woff2;base64,${readFileSync(f).toString('base64')}) format('woff2');}`;
+    }).join('\n');
   }
 
   const faces = [
@@ -133,11 +144,13 @@ async function renderDeck(browser, fontCss, slug) {
   if (/fonts\.(googleapis|gstatic)/.test(html)) throw new Error('Google Fonts reference survived stripping');
 
   const { css, theme } = themeCss(html, path.dirname(deckPath));
+  let faces = null;
   if (theme) {
     // themed deck: inline its stylesheets and only the faces its theme declares
     const themeSrc = readFileSync(path.join(ROOT, 'design/themes', `${theme}.css`), 'utf8');
     const m = themeSrc.match(/@fonts ([^*]+)/);
     if (!m) throw new Error(`${theme}.css declares no @fonts`);
+    faces = parseFonts(m[1]);
     html = html
       .replace(/<link rel="stylesheet"[^>]*>\s*/g, '')
       .replace('</head>', `<style>\n${fontFaces(m[1])}\n${css}\n</style></head>`);
@@ -156,30 +169,63 @@ async function renderDeck(browser, fontCss, slug) {
   await page.goto('file://' + tmp, { waitUntil: 'load' });
   await page.waitForFunction(() => document.documentElement.dataset.fitted === 'true', { timeout: 60000 });
 
-  // fonts.check() needs the weight actually used — Archivo Narrow ships 600/700 only,
-  // so a bare 'Archivo Narrow' check tests weight 400 and fails on a correct render.
-  const ok = await page.evaluate(() => ({
-    black: document.fonts.check("150px 'Archivo Black'"),
-    sans: document.fonts.check("400 30px 'Archivo'"),
-    narrow: document.fonts.check("700 18px 'Archivo Narrow'"),
-  }));
-  // fonts.check() returns true for families with no @font-face at all, so also prove
-  // Archivo Black measures differently from the Arial fallback.
+  // ── prove the real typefaces loaded ──
+  // This guard used to check a fixed trio of Archivo faces, which is only
+  // correct for the Bold Editorial deck: a theme that declares Anton and
+  // Barlow Condensed failed on a perfectly good render, and — worse — a theme
+  // whose faces were missing entirely would have PASSED, because
+  // fonts.check() returns true for a family with no @font-face at all.
+  //
+  // So: check exactly what the theme declared, and load before checking.
+  // `font-display:block` means a declared-but-unused face is never fetched,
+  // and check() reports false for it; load() settles that honestly.
+  if (faces) {
+    const missing = await page.evaluate(async (specs) => {
+      await Promise.all(specs.map(f =>
+        document.fonts.load(`${f.style} ${f.weight} 40px '${f.family}'`).catch(() => {})));
+      return specs.filter(f =>
+        !document.fonts.check(`${f.style} ${f.weight} 40px '${f.family}'`))
+        .map(f => `${f.family} ${f.weight} ${f.style}`);
+    }, faces);
+    if (missing.length) {
+      throw new Error(`ABORT ${slug}: theme declares faces that did not load: ${missing.join(', ')}`);
+    }
+  } else {
+    const ok = await page.evaluate(() => ({
+      black: document.fonts.check("150px 'Archivo Black'"),
+      sans: document.fonts.check("400 30px 'Archivo'"),
+      narrow: document.fonts.check("700 18px 'Archivo Narrow'"),
+    }));
+    if (!ok.black || !ok.sans || !ok.narrow) {
+      throw new Error(`ABORT ${slug}: Archivo not loaded (${JSON.stringify(ok)})`);
+    }
+  }
+
+  // check() alone cannot catch the case where the @font-face block was never
+  // inlined at all — it returns true for a family that has no @font-face.
+  // Comparing against Arial does not work either: Archivo's metrics sit within
+  // half a pixel of Arial's at 150px, so a healthy Desk Collage render failed.
+  // Compare against a family that certainly does not exist instead: if the
+  // real face is missing, both fall back to the same default and match.
   const width = await page.evaluate(() => {
-    const measure = (family) => {
+    const root = getComputedStyle(document.documentElement);
+    const family = (root.getPropertyValue('--display-face').split(',')[0] || "'Archivo Black'").trim();
+    const weight = root.getPropertyValue('--display-weight').trim() || '400';
+    const measure = (f) => {
       const s = document.createElement('span');
       s.textContent = 'REBUILT SAME APP';
-      s.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font-size:150px;font-family:${family}`;
+      s.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;`
+                      + `font-size:150px;font-weight:${weight};font-family:${f}`;
       document.body.appendChild(s);
       const w = s.getBoundingClientRect().width;
       s.remove();
       return w;
     };
-    return { black: measure("'Archivo Black'"), arial: measure('Arial') };
+    return { family, real: measure(family), absent: measure("'NoSuchFamily-ZzQq'") };
   });
-  if (!ok.black || !ok.sans || !ok.narrow || Math.abs(width.black - width.arial) < 5) {
-    throw new Error(`ABORT ${slug}: Archivo not loaded — would ship an Arial fallback `
-                  + `(${JSON.stringify(ok)}, black=${width.black} arial=${width.arial})`);
+  if (Math.abs(width.real - width.absent) < 5) {
+    throw new Error(`ABORT ${slug}: display face ${width.family} measures identically to a `
+                  + `non-existent family (${width.real} vs ${width.absent}) — the face never loaded`);
   }
 
   const sections = await page.$$('section.slide');

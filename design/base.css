@@ -1,11 +1,11 @@
-/* ─────────────────────────────────────────────────────────────
+/* ────────────────────────────────────────────────────────────
    CAROUSEL BASE — the skeleton. Never changes between themes.
    Every visual choice here reads from a --token that a theme file
    in design/themes/ supplies. Structure is fixed; look is swapped.
 
    Frame is locked to 1080x1350 (4:5). Instagram carousels must be
    one ratio throughout, and scripts/render-deck.mjs asserts it.
-   ───────────────────────────────────────────────────────────── */
+   ─────────────────────────────────────────────────────────── */
 
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#2A2A2A}
@@ -74,7 +74,10 @@ body{-webkit-font-smoothing:antialiased}
 .copy--wide{max-width:40ch}
 
 /* ── rules ── */
-.rule{height:var(--rule-weight,3px);background:currentColor;border:0;margin:0;width:100%}
+/* `color:inherit` is load-bearing: Chrome's UA sheet sets `hr{color:gray}`, which
+   beats inheritance, so `currentColor` on an hr resolves to grey unless reset.
+   The published decks had this; it was lost when base.css was extracted. */
+.rule{height:var(--rule-weight,3px);color:inherit;background:currentColor;border:0;margin:0;width:100%}
 .rule--short{width:120px;flex:none}
 
 /* ── COMPONENTS — each theme decides which it uses ── */
