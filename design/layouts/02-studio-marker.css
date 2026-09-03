@@ -1,0 +1,79 @@
+/* 02 — STUDIO MARKER : composition + components.
+   Spec rules, not a recolour: "Marker or grotesque, never both loud."
+   · "Grey is a colour." · "Mustard = attention." · "UI as ornament."
+
+   The reference is 60% documentary photography. We have none, so the two
+   photo roles are rebuilt from texture: the grey object field becomes a
+   halftone-screened panel (how a scanned product shot actually prints), and
+   the detection overlay — borrowed interface, the spec's only decoration —
+   does the framing job the photograph did. That is a substitution, not a
+   pretence: nothing here imitates a picture. */
+
+:root{--sm-green:#2E7D46;--sm-manila:#EDE4CF}
+
+.sm-slide{justify-content:space-between;padding:76px}   /* margin 7% */
+
+/* ── save mark — borrowed UI, top right, on every frame ── */
+.sm-save{width:26px;height:32px;border:3px solid currentColor;flex:none;
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+
+/* ── marker statement — the loud voice. Never on the same frame as a
+      loud grotesque headline. Baseline drift is what makes it hand-set. ── */
+.sm-marker{font-family:var(--aside-face);font-weight:400;font-size:126px;
+  line-height:1.02;letter-spacing:-.01em;margin:0;text-transform:none}
+.sm-marker em{font-style:normal;display:inline-block}
+.sm-marker em:nth-of-type(2n){transform:translateY(-9px) rotate(-1.4deg)}
+.sm-marker em:nth-of-type(3n){transform:translateY(6px) rotate(1deg)}
+/* a highlighter lays ink over the x-height, not over the whole line box —
+   a flat background rectangle swallows the descenders of the line above */
+.sm-marker .y{padding:0 12px;box-decoration-break:clone;
+  background:linear-gradient(transparent 15%,var(--accent) 15%,var(--accent) 95%,transparent 95%)}
+
+/* ── grotesque headline — the quiet voice, tight stacked caps ── */
+.sm-head{font-family:var(--display-face);font-weight:400;text-transform:uppercase;
+  font-size:96px;line-height:.92;letter-spacing:-.01em;margin:0}
+.sm-head--sm{font-size:66px}
+
+/* ── highlighter caption — yellow behind, left edges staggered ── */
+.sm-hl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
+  align-items:flex-start;gap:12px}
+.sm-hl li{background:var(--highlight);color:var(--highlight-ink);
+  font-size:34px;font-weight:600;line-height:1.35;padding:8px 16px}
+.sm-hl li:nth-child(2){margin-left:38px}
+.sm-hl li:nth-child(3){margin-left:16px}
+.sm-hl li:nth-child(4){margin-left:52px}
+
+/* ── manila folder card — tab, 3px offset shadow. The "client wins" device ── */
+.sm-folder{position:relative;background:var(--sm-manila);color:#111;
+  padding:44px 40px 40px;box-shadow:3px 3px 0 #111;margin-top:34px}
+.sm-folder::before{content:attr(data-tab);position:absolute;top:-38px;left:0;
+  background:var(--sm-manila);color:#111;box-shadow:3px -3px 0 #111;
+  font-family:var(--meta-face);font-size:19px;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;padding:10px 30px 8px}
+.sm-folder p{margin:0;font-size:31px;line-height:1.5}
+.sm-folder p+p{margin-top:18px}
+
+/* ── case-study tile — label above, screened panel, centred caption below ── */
+.sm-tile{display:flex;flex-direction:column;gap:26px}
+.sm-tile .lbl{font-family:var(--meta-face);font-size:20px;font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase}
+.sm-panel{position:relative;overflow:hidden;background:#C9C9C9;
+  border:2px solid #111;min-height:330px;display:flex;align-items:center;
+  justify-content:center;padding:44px}
+.sm-panel .cap{position:relative;z-index:2;font-family:var(--display-face);
+  text-transform:uppercase;font-size:78px;line-height:.94;text-align:center;color:#111}
+.sm-cap{font-size:26px;line-height:1.45;text-align:center;margin:0;max-width:38ch;align-self:center}
+
+/* ── detection overlay — 2px green boxes + micro readout. Borrowed UI ── */
+.sm-detect{position:absolute;border:2px solid var(--sm-green);pointer-events:none;z-index:3}
+.sm-detect::after{content:attr(data-read);position:absolute;top:-26px;left:-2px;
+  background:var(--sm-green);color:#fff;font-family:var(--meta-face);font-size:14px;
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;white-space:nowrap}
+
+/* ── corner tag pair — ink bar, two mono labels, bottom edge ── */
+.sm-tags{display:flex;align-items:stretch;gap:0;background:#111;color:#fff}
+.sm-tags span{font-family:var(--meta-face);font-size:18px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;padding:14px 22px}
+.sm-tags span+span{margin-left:auto;background:var(--accent);color:#111}
+
+.sm-slide > *:not(.sm-detect){position:relative;z-index:1}

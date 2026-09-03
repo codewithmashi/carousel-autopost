@@ -1,0 +1,64 @@
+/* 04 — SUNSET GRIT : composition + components.
+   Spec rules: "Three inks only." · "One word in script." · "Corner triple."
+   · "Headlines anchor to one corner; never centred."
+
+   The reference is built on high-contrast black-and-white LA photography.
+   With no photographs, the photo role is played by the night-black field
+   carrying heavy grain and a bottom gradient — the two things that actually
+   read as a crushed, printed photo. No illustration stands in for a picture. */
+
+.sg-slide{justify-content:space-between;padding:65px}   /* margin 6% */
+
+/* ── kicker: Barlow Condensed, wide tracking. Top-left, every frame ── */
+.sg-kicker{font-family:var(--meta-face);font-size:30px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;line-height:1.2;margin:0}
+
+/* ── headline: Anton, 2–4 stacked lines, anchored to a corner ── */
+.sg-head{font-family:var(--display-face);font-weight:400;text-transform:uppercase;
+  font-size:132px;line-height:.9;letter-spacing:-.01em;margin:0}
+.sg-head--sm{font-size:84px}
+.sg-head--xs{font-size:62px;line-height:.94}
+.sg-head .hot{color:var(--accent)}          /* red-word emphasis, 1–2 words */
+
+/* ── script accent: ONE word, skewed. Never a whole line ── */
+.sg-script{font-family:var(--aside-face);font-weight:400;display:inline-block;
+  transform:skewX(-6deg);font-size:132px;line-height:1.06;text-transform:none;
+  letter-spacing:.01em}
+.sg-script--sm{font-size:92px}
+/* brush slab — the 6px rounded rule the reference paints under the word */
+.sg-slab{position:relative;padding-bottom:6px}
+.sg-slab::after{content:"";position:absolute;left:-6px;right:-12px;bottom:-10px;
+  height:8px;border-radius:6px;background:currentColor}
+
+/* ── photo stand-in: crushed black field, soft bottom gradient ──
+   Not a fake photograph — a printed black field with the same tonal
+   behaviour, so the headline sits on it the way the reference's does. */
+.sg-photo{position:relative}
+.sg-photo::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;
+  z-index:1;pointer-events:none;
+  background:linear-gradient(transparent,rgba(0,0,0,.72))}
+
+/* ── corner triple: kicker top-left, headline bottom-left, stack opposite ── */
+.sg-stack{list-style:none;margin:0;padding:0;text-align:right}
+.sg-stack li{font-family:var(--meta-face);font-size:28px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;line-height:1.55}
+
+/* ── triple-proof: three short uppercase lines under a 3px rule ── */
+.sg-triple{border-top:3px solid currentColor;margin:0;padding:26px 0 0;list-style:none}
+.sg-triple li{font-family:var(--meta-face);font-size:34px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;line-height:1.5}
+.sg-triple li+li{margin-top:10px}
+
+/* ── brush zigzag: one energetic stroke, max one per frame ── */
+.sg-zig{display:block;width:300px;height:56px;overflow:visible}
+/* stroke follows the field's ink by default — hard-coding the accent made the
+   mark invisible on the red field, which is exactly where the spec puts it.
+   Set --zig-ink to override on a field where the accent does contrast. */
+.sg-zig path{fill:none;stroke:var(--zig-ink,currentColor);stroke-width:11;
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* ── CTA line, condensed and wide ── */
+.sg-cta{font-family:var(--meta-face);font-size:30px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;margin:0}
+
+.sg-slide > *{position:relative;z-index:2}

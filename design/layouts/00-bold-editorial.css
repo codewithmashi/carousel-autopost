@@ -1,0 +1,59 @@
+/* 00 — BOLD EDITORIAL : composition + components.
+   The incumbent. Four posts are already live in this look, so the job here is
+   to codify the published arrangement rather than invent a new one — the
+   rotation must return to something the grid already recognises.
+
+   Rules the shipped decks actually followed:
+   "One idea per frame." · "The type is the image — no illustration, ever."
+   · "Every frame is anchored top and bottom; the middle is where it breathes."
+   · "Red and cream alternate; never two cream frames in a row." */
+
+.be-slide{justify-content:space-between}
+
+/* ── eyebrow: section label with a short rule under it ──
+   The editorial section marker. Present on every frame, always top-left. */
+.be-eyebrow{font-family:var(--meta-face);font-size:20px;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;line-height:1.6}
+.be-eyebrow::after{content:"";display:block;width:64px;height:3px;
+  background:currentColor;margin-top:14px}
+
+/* ── lede: the one oversized paragraph, slide 01 only ── */
+.be-lede{font-size:38px;line-height:1.35;max-width:26ch;margin:0;font-weight:500}
+
+/* ── drop initial: opens the problem frame, editorial convention ── */
+.be-drop::first-letter{font-family:var(--display-face);font-weight:var(--display-weight);
+  font-size:2.9em;line-height:.78;float:left;margin:6px 16px 0 0;color:var(--accent-on-field,inherit)}
+
+/* ── callout: heavy-ruled box, the aside that must not be missed ── */
+.be-callout{border:var(--rule-weight,3px) solid currentColor;padding:34px 36px;margin:0}
+.be-callout p{margin:0;font-size:29px;line-height:1.45}
+.be-callout .k{display:block;font-family:var(--meta-face);font-size:19px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px;opacity:.85}
+
+/* ── stat block: the proof figure with its rule and note, as one unit ── */
+.be-stat{display:flex;flex-direction:column;gap:26px}
+
+/* ── index rail: slide number set vertically down the right edge ──
+   Fills the outer margin the way a magazine folio does. `writing-mode`
+   rather than `rotate`: a rotated box keeps its unrotated width for
+   layout purposes and overhangs into the text column, which put the
+   folio straight through the callout border on slide 06. */
+.be-rail{position:absolute;right:24px;top:50%;transform:translateY(-50%);
+  writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:var(--meta-face);font-size:18px;font-weight:700;
+  letter-spacing:.42em;text-transform:uppercase;opacity:.32;
+  pointer-events:none;white-space:nowrap}
+
+/* ── step frames: numeral hung left of the headline, not stacked above ── */
+.be-step{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:start}
+.be-step .step-n{font-size:96px;line-height:.78}
+.be-step h2{margin:0}
+
+/* keep flow content above the echo watermark without clobbering the rail */
+.be-slide > *:not(.be-rail):not(.echo){position:relative;z-index:1}
+
+/* ── folio: the page number, in the condensed face ──
+   The published decks set `.foot .n` in Archivo Narrow 700. Keeping it is
+   what makes a returning frame read as the same magazine — and the theme
+   declares the face, so something must actually use it. */
+.be-folio{font-family:'Archivo Narrow',Helvetica,sans-serif;font-weight:700;letter-spacing:.08em}

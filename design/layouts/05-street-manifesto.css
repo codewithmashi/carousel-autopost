@@ -1,0 +1,86 @@
+/* 05 — STREET MANIFESTO : composition + components.
+   Spec rules: "Speak street." · "Brush vs. grotesque" — brush carries the
+   slogan, a neutral grotesque carries the facts, and that contrast IS the
+   system · "Glyph as texture." · signature with the asterisk always attached.
+
+   The reference photographs its own interventions. We have no photographs, so
+   the documentary frame is dropped rather than faked; the outlined glyph and
+   the mark-field infographic carry the frames it would have filled. */
+
+/* Every accent mark routes through --st-mark rather than --accent directly.
+   The accent IS the tomato field, so a tomato hashtag, arrow or circled word
+   simply vanishes on slide 01. One token, flipped per field, fixes all of them. */
+.st-slide{--st-mark:var(--accent);justify-content:space-between;padding:86px}
+.slide[data-field="a"].st-slide{--st-mark:var(--on-a)}   /* on tomato: asphalt */
+.st-asphalt{--st-mark:#E8381A}
+.st-slide--data{padding:65px}                                   /* data tiles tighten */
+
+/* asphalt field — the third ink. No data-field: the background and every
+   colour it implies are set here, so base's field rules stay out of it. */
+.st-asphalt{background:#1E1B18;color:#F4F1E8}
+
+/* ── signature: asterisk always attached, top corner ── */
+.st-sig{font-family:var(--meta-face);font-size:20px;font-weight:600;
+  letter-spacing:.12em;text-transform:lowercase}
+.st-hash{font-family:var(--meta-face);font-size:20px;font-weight:600;
+  letter-spacing:.12em;color:var(--st-mark)}
+
+/* ── slogan: hand-painted, uppercase, ragged baselines, letters touching ── */
+.st-slogan{font-family:var(--display-face);font-weight:400;text-transform:uppercase;
+  font-size:104px;line-height:.98;letter-spacing:-.03em;margin:0}
+.st-slogan span{display:block}
+.st-slogan span:nth-child(2){transform:translate(14px,-6px) rotate(-.8deg)}
+.st-slogan span:nth-child(3){transform:translate(-8px,-10px) rotate(.6deg)}
+.st-slogan--sm{font-size:84px}
+.st-slogan .hot{color:var(--st-mark)}
+
+/* ── statement + data: the grotesque half of the contrast ── */
+.st-statement{font-family:var(--body-face);font-weight:500;font-size:48px;
+  line-height:1.2;margin:0;max-width:20ch}
+.st-data{list-style:none;margin:0;padding:0}
+.st-data li{font-family:var(--body-face);font-weight:500;font-size:36px;
+  letter-spacing:.02em;text-transform:uppercase;line-height:1.35;
+  padding:18px 0;border-bottom:2px solid currentColor}
+.st-data li:first-child{border-top:2px solid currentColor}
+.st-data .hot{color:var(--st-mark)}
+.st-note{font-size:22px;line-height:1.45;margin:0;opacity:.8}
+
+/* ── outlined glyph watermark: one letter, stroke only, cropped by the frame ── */
+.st-glyph{position:absolute;right:-58px;top:-96px;margin:0;pointer-events:none;
+  font-family:var(--display-face);font-weight:400;font-size:460px;line-height:.78;
+  text-transform:uppercase;color:transparent;
+  -webkit-text-stroke:4px var(--st-glyph-ink,rgba(30,27,24,.34));z-index:0}
+.slide[data-field="b"] .st-glyph{-webkit-text-stroke-color:rgba(30,27,24,.16)}
+.st-asphalt .st-glyph{-webkit-text-stroke-color:rgba(244,241,232,.22)}
+
+/* ── hand-drawn circle round the accusation word ── */
+.st-circle{position:relative;display:inline-block}
+/* the loop has to clear the word, not bite into it */
+.st-circle svg{position:absolute;left:-34px;top:-24px;width:calc(100% + 74px);
+  height:calc(100% + 52px);overflow:visible}
+.st-circle path{fill:none;stroke:var(--st-mark);stroke-width:5;stroke-linecap:round}
+
+/* ── verse tile: four short lines, the last one red ── */
+.st-verse{margin:0;font-family:var(--body-face);font-weight:500;font-size:44px;
+  line-height:1.32;text-transform:uppercase;letter-spacing:.01em}
+.st-verse b{display:block;font-weight:500;color:#E8381A}
+
+/* ── mark-field: a grid of hand crosses, exactly one red ──
+   The spec's own infographic: "one paper changes nothing" — the single red
+   mark is the whole argument, so it is never more than one. */
+.st-marks{display:grid;grid-template-columns:repeat(8,1fr);gap:18px;margin:0}
+.st-marks i{font-style:normal;font-family:var(--display-face);font-size:46px;
+  line-height:1;text-align:center;opacity:.55}
+.st-marks i.on{color:var(--st-mark);opacity:1}
+
+/* ── red arrow: carousel "next", bottom-left only ── */
+.st-arrow{display:inline-flex;align-items:center;gap:12px;font-family:var(--meta-face);
+  font-size:20px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--st-mark)}
+/* shaft then head, in that order — a ::after can only ever come last, which
+   put the arrowhead in front of the word instead of at the point of travel */
+.st-arrow b{width:52px;height:3px;background:currentColor;display:block}
+.st-arrow i{width:0;height:0;border-left:13px solid currentColor;
+  border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:-14px}
+
+.st-slide > *:not(.st-glyph){position:relative;z-index:1}
