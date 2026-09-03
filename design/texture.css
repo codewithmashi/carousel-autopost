@@ -78,7 +78,7 @@
 /* A duotone COMPRESSES the tonal range between two inks, it does not tint.
    Raise the floor with `lighten` using the DARK ink: nothing ends up darker
    than it. Lower the ceiling with `darken` using the LIGHT ink: nothing ends
-   up lighter. Swap those two and the image collapses to black. */
+   up lighter. Swap those two and every image collapses to black. */
 .tx-duo::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:var(--duo-dark,#111);mix-blend-mode:lighten}
 .tx-duo::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
