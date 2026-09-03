@@ -1,13 +1,28 @@
 name: Publish carousel
 
+# Posting time, honestly stated: GitHub's scheduled runs are best-effort and get
+# delayed under load. Ours have landed between 40 minutes and 6 hours after the
+# cron, so a single trigger cannot hold a time. Instead this fires several times
+# across a window and the publisher exits quietly once something has gone out
+# today — the first attempt that actually runs wins.
+#
+# Odd minutes on purpose: the top of the hour is the most congested slot on
+# GitHub's scheduler, so :07 is picked up sooner than :00 would be.
+
 on:
   schedule:
-    # Mon/Wed/Fri 19:12 IST = 13:42 UTC. GitHub cron is always UTC.
-    - cron: '42 13 * * 1,3,5'
+    - cron: '7 13 * * 1,3,5'
+    - cron: '7 14 * * 1,3,5'
+    - cron: '7 15 * * 1,3,5'
+    - cron: '7 16 * * 1,3,5'
   workflow_dispatch:
     inputs:
       dry_run:
         description: 'Preflight only — do not post'
+        type: boolean
+        default: false
+      force:
+        description: 'Post even if something already went out today'
         type: boolean
         default: false
 
@@ -22,6 +37,12 @@ jobs:
       contents: write          # to commit the advanced QUEUE back
     steps:
       - uses: actions/checkout@v4
+        with:
+          # `ref: main` resolves at checkout time. The default would be the SHA
+          # that triggered the schedule, which for the 14:07 run is the state
+          # BEFORE the 13:07 run published — the already-posted-today guard
+          # would not see today's entry and two decks would go out at once.
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -31,7 +52,10 @@ jobs:
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
-        run: node scripts/publish-next.mjs ${{ inputs.dry_run && '--dry-run' || '' }}
+        run: |
+          node scripts/publish-next.mjs \
+            ${{ inputs.dry_run && '--dry-run' || '' }} \
+            ${{ inputs.force && '--force' || '' }}
 
       - name: Commit queue state
         if: ${{ !inputs.dry_run }}
@@ -41,6 +65,9 @@ jobs:
             git config user.email "actions@github.com"
             git add QUEUE PUBLISHED.log
             git commit -m "publish: advance queue [skip ci]"
+            # Another run in this window may have pushed first; rebase rather
+            # than fail, since losing this commit would republish the same deck.
+            git pull --rebase --autostash
             git push
           else
             echo "no queue change to commit"
