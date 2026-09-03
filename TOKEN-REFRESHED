@@ -1,0 +1,10 @@
+# When the Instagram access token was last renewed, and how long that one lasts.
+# Format: <ISO timestamp><TAB><lifetime in seconds><TAB><note>
+# scripts/refresh-token.mjs reads the first non-comment line and rewrites this
+# file whenever it successfully stores a refreshed token.
+#
+# The date below is an ESTIMATE. The first posts went out on 2026-08-28 and the
+# token was generated shortly before that, so this is the most pessimistic
+# reasonable starting point — it will be replaced with a real one the first
+# time the weekly job runs with GH_PAT set.
+2026-08-28T00:00:00Z	5184000	estimated seed, not a recorded refresh
