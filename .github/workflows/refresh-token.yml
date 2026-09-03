@@ -1,0 +1,61 @@
+name: Refresh Instagram token
+
+# An Instagram long-lived token dies after 60 days. Nothing was renewing ours,
+# so the pipeline had a silent hard stop coming in late October: posts would
+# simply stop and the only clue would be a failed run nobody was watching.
+#
+# This job refreshes the token weekly. With a GH_PAT secret present it writes
+# the new token straight back into IG_ACCESS_TOKEN and the deadline never
+# arrives. Without one it still tracks the real deadline and FAILS the run once
+# fewer than 14 days remain, so the warning lands by email while there is time.
+
+on:
+  schedule:
+    - cron: '17 4 * * 1'        # Mondays, 04:17 UTC — well clear of the publisher
+  workflow_dispatch:
+    inputs:
+      check_only:
+        description: 'Report days remaining without storing anything'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write               # to commit the deadline stamp
+
+concurrency:
+  group: refresh-token
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main             # current HEAD, not the SHA that triggered the schedule
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install libsodium
+        run: npm install --no-save --no-fund --no-audit libsodium-wrappers
+
+      - name: Refresh
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: node scripts/refresh-token.mjs ${{ inputs.check_only && '--check' || '' }}
+
+      - name: Record the new deadline
+        if: always()
+        run: |
+          if [[ -n "$(git status --porcelain TOKEN-REFRESHED)" ]]; then
+            git config user.name  "carousel-bot"
+            git config user.email "actions@github.com"
+            git add TOKEN-REFRESHED
+            git commit -m "token: renewed, deadline reset [skip ci]"
+            git push
+          else
+            echo "deadline unchanged"
+          fi
