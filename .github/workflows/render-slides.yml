@@ -59,6 +59,20 @@ jobs:
           echo "slugs=${SLUGS}" >> "$GITHUB_OUTPUT"
           echo "decks to force-render: '${SLUGS}'"
 
+      - name: Fetch imagery
+        # Queries come from each theme's @imagery declaration. No key set =>
+        # the script exits 0 and decks render type-only, so a missing secret
+        # degrades the look rather than breaking the build.
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: |
+          for slug in ${{ steps.pick.outputs.slugs }}; do
+            theme=$(grep -o 'themes/[0-9]*-[a-z-]*\.css' "decks/$slug/deck.html" | head -1 | sed 's|themes/||')
+            [ -n "$theme" ] || { echo "$slug: no theme link, type-only"; continue; }
+            echo "$slug → $theme"
+            node scripts/fetch-images.mjs "$slug" "$theme" 4
+          done
+
       - name: Render slides
         run: node scripts/render-deck.mjs ${{ steps.pick.outputs.slugs }}
 
