@@ -1,0 +1,42 @@
+/* 03 — VISTTO MONO : "Ask, don't announce" · "The brand interrupts"
+   · "One blue moment" · headline owns the top ~45% */
+.vm-slide{justify-content:flex-start;gap:0}
+.vm-q{font-family:var(--display-face);font-weight:500;text-transform:uppercase;
+  font-size:104px;line-height:.95;letter-spacing:.005em;margin:0}
+.vm-q b{font-weight:700}
+/* emphasis word: sentence-case italic dropped inside the condensed question */
+.vm-q i{font-family:'Archivo',sans-serif;font-style:italic;font-weight:700;
+  text-transform:none;font-size:.86em;letter-spacing:-.02em}
+/* the lockup wedged mid-sentence at a fraction of the size */
+.vm-lock{display:inline-block;font-family:'Archivo',sans-serif;font-size:22px;font-weight:700;
+  line-height:1.1;letter-spacing:.06em;text-transform:uppercase;vertical-align:.34em;margin:0 10px}
+.vm-sub{font-size:27px;line-height:1.55;opacity:.8;margin:38px 0 0;max-width:34ch}
+.vm-cta{font-size:23px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0}
+/* mention bubble, overlapping the frame edge */
+.vm-bubble{position:absolute;top:64px;right:-14px;background:var(--accent);color:#fff;
+  font-size:26px;font-weight:600;padding:16px 26px;border-radius:30px 30px 30px 8px;z-index:3}
+/* inverted knockout — the twist line after a bold quote */
+.vm-knock{display:inline-block;background:#F4F4F2;color:#111;font-size:30px;font-weight:700;padding:6px 14px}
+/* parenthetical aside, hairline-boxed, under the question */
+.vm-aside{border:1px solid rgba(255,255,255,.35);padding:20px 26px;font-size:25px;
+  line-height:1.45;opacity:.85;margin:34px 0 0;max-width:36ch}
+.slide[data-field="b"] .vm-aside{border-color:rgba(17,17,17,.3)}
+/* signage panel — type set inside a photographed sign, faked as a lit panel */
+.vm-panel{background:#1B1B1B;border:1px solid #2A2A2A;padding:44px 40px;
+  font-family:var(--display-face);font-weight:700;font-size:76px;line-height:1.02;
+  text-transform:uppercase;color:#F4F4F2;box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.vm-meta{font-family:var(--meta-face);font-size:19px;font-weight:600;
+  letter-spacing:.26em;text-transform:uppercase;opacity:.55}
+
+/* With no photography the lower half would sit empty, so the frame is filled
+   the way the reference fills it with an object: an oversized outlined
+   numeral, cropped by the edge. Structure, not decoration. */
+.vm-numeral{position:absolute;right:-30px;bottom:-90px;font-family:var(--display-face);
+  font-weight:700;font-size:420px;line-height:.8;color:transparent;pointer-events:none;
+  -webkit-text-stroke:2px var(--vm-numeral-ink,rgba(244,244,242,.14));z-index:0}
+.slide[data-field="b"] .vm-numeral{-webkit-text-stroke-color:rgba(17,17,17,.12)}
+.slide[data-field="accent"] .vm-numeral{-webkit-text-stroke-color:rgba(255,255,255,.3)}
+/* lift flow content above the watermark WITHOUT clobbering the absolutely
+   positioned bubble and numeral — a blanket `position:relative` on every
+   child overrides their `position:absolute` and they snap back into flow. */
+.vm-slide > *:not(.vm-numeral):not(.vm-bubble){position:relative;z-index:1}
