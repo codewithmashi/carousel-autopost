@@ -40,9 +40,14 @@ jobs:
 
       - name: Install renderer
         run: |
-          npm install --no-save --no-fund --no-audit \
-            playwright \
-            @fontsource/archivo-black @fontsource/archivo @fontsource/archivo-narrow
+          # Font packages are derived from design/themes/*.css, never listed
+          # here. This step used to hard-code the three Archivo packages, which
+          # was only correct for Bold Editorial — the first themed deck using
+          # Anton or Permanent Marker would have aborted the render on a
+          # missing face, in October, unattended.
+          PKGS=$(node scripts/font-packages.mjs)
+          echo "font packages: $PKGS"
+          npm install --no-save --no-fund --no-audit playwright $PKGS
           npx playwright install --with-deps chromium
 
       - name: Work out which decks changed
@@ -87,4 +92,7 @@ jobs:
           git commit -m "render: slides for${{ steps.pick.outputs.slugs && format(' {0}', steps.pick.outputs.slugs) || ' pending decks' }} [skip ci]"
           # GITHUB_TOKEN pushes deliberately do not re-trigger workflows, so this
           # cannot loop. Netlify watches the repo directly and still deploys.
+          # Rebase first: the publisher commits QUEUE/PUBLISHED.log to the same
+          # branch and the two jobs can overlap.
+          git pull --rebase --autostash
           git push
