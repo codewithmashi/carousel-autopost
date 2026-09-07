@@ -17,8 +17,6 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 
 ## Queue
 
-- [ ] business · Why fixed-price kills mobile projects, and what to quote instead · PROOF: structural — the shape of the risk, not a client number
-
 - [ ] teardown · "Works on iOS and Android" is two products wearing one name · PROOF: structural — what has to be decided, built and tested twice
 
 - [ ] business · The app store rules that are product decisions, not paperwork · PROOF: verifiable — account deletion, privacy labels and payment rules are requirements, not admin
@@ -59,6 +57,8 @@ a figure or a story. Move one up into `## Queue` once the real detail is filled 
 - receipts · Before/after of a rebuild — needs the real app and the real difference
 
 ## Done
+
+- [x] business · Why fixed-price kills mobile projects, and what to quote instead · slug `fixed-price-mobile-builds` · queued 2026-09-07 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a structural before/after (SAME CHANGE. DIFFERENT CONVERSATION.), not a figure
 
 - [x] teardown · What founders think slows a mobile launch vs. what actually does · slug `what-actually-delays-a-launch` · queued 2026-09-04 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a structural before/after (THE PLAN COUNTS SCREENS / THE CALENDAR COUNTS ANSWERS), not a figure
 
