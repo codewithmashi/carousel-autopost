@@ -3,7 +3,10 @@
  * Publish the next queued carousel to Instagram. Runs in GitHub Actions.
  *
  * Reads QUEUE (one slug per line, top first), publishes it, moves it to
- * PUBLISHED.log. Images are already hosted on Netlify — this job renders nothing.
+ * PUBLISHED.log. Images are served straight from this public GitHub repo via
+ * raw.githubusercontent.com — this job renders nothing and needs no separate
+ * host. (Netlify used to serve them; its Free-plan credit cap started
+ * blocking production deploys, so the pipeline no longer depends on it.)
  *
  *   --dry-run      preflight only, stop before any Instagram call
  *   --force        post even if something already went out today
@@ -24,7 +27,7 @@
  */
 import { readFileSync, writeFileSync, existsSync, appendFileSync } from 'node:fs';
 
-const BASE = 'https://mashi-carousels.netlify.app';
+const BASE = 'https://raw.githubusercontent.com/codewithmashi/carousel-autopost/main/public';
 const API  = 'https://graph.instagram.com/v23.0';
 const dry   = process.argv.includes('--dry-run');
 const force = process.argv.includes('--force');
@@ -106,20 +109,20 @@ for (let i = 1; i <= 10; i++) {
     // A network failure is not "no more slides" — treat it as fatal rather than
     // silently deciding the deck has fewer slides than it does.
     stop(3, 'Cannot reach the slides', `HEAD ${u} failed: ${err.message}`,
-      'Netlify was unreachable, so the slide set could not be verified.');
+      'raw.githubusercontent.com was unreachable, so the slide set could not be verified.');
   }
   if (!r.ok) break;
   if (!(r.headers.get('content-type') || '').startsWith('image/')) {
     stop(3, 'Slides are not images', `NOT AN IMAGE: ${u}`,
-      'Netlify is serving something else at that path — usually the SPA fallback,',
-      'which means the deploy has not published this deck yet.');
+      'GitHub is serving something other than a PNG at that path — the slug or',
+      'slide number is probably wrong, or that file was never committed.');
   }
   urls.push(u);
 }
 if (urls.length < 2) {
   stop(3, 'Slides missing',
     `Found ${urls.length} public slide(s) for '${slug}' — need at least 2.`,
-    'Either the render workflow has not run, or Netlify has not finished deploying.');
+    'The render workflow has probably not committed the PNGs for this deck yet.');
 }
 say(`Preflight: ${urls.length} slides public ✓`);
 
