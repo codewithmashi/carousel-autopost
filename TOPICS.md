@@ -17,8 +17,6 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 
 ## Queue
 
-- [ ] teardown · Login is not a screen — what "add sign-in" pulls in behind it · PROOF: structural — resets, sessions, deletion, and the store rules that attach to each
-
 - [ ] business · What an app costs after launch, when nobody is adding features · PROOF: structural — the recurring line items that exist at zero new work
 
 - [ ] tools · Push notifications: why "just send a notification" is a delivery chain · PROOF: structural before/after — every hop between your server and a lock screen
@@ -53,6 +51,8 @@ a figure or a story. Move one up into `## Queue` once the real detail is filled 
 - receipts · Before/after of a rebuild — needs the real app and the real difference
 
 ## Done
+
+- [x] teardown · Login is not a screen — what "add sign-in" pulls in behind it · slug `login-is-not-a-screen` · queued 2026-09-14 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is structural (ONE SCREEN. Four systems. — resets, sessions, deletion and the store rules attached to each), not a figure
 
 - [x] business · The app store rules that are product decisions, not paperwork · slug `app-store-rules-are-product-decisions` · queued 2026-09-11 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a verifiable constant (REQUIREMENT. Not a request. — in-app account deletion, an accurate privacy label, and platform payment rails for digital goods are store requirements), not a figure
 
