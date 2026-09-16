@@ -17,8 +17,6 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 
 ## Queue
 
-- [ ] business · What an app costs after launch, when nobody is adding features · PROOF: structural — the recurring line items that exist at zero new work
-
 - [ ] tools · Push notifications: why "just send a notification" is a delivery chain · PROOF: structural before/after — every hop between your server and a lock screen
 
 - [ ] teardown · The offline question nobody asks until the demo is on hotel wifi · PROOF: structural before/after — the same screen under two network assumptions
@@ -51,6 +49,8 @@ a figure or a story. Move one up into `## Queue` once the real detail is filled 
 - receipts · Before/after of a rebuild — needs the real app and the real difference
 
 ## Done
+
+- [x] business · What an app costs after launch, when nobody is adding features · slug `app-costs-after-launch` · queued 2026-09-16 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a verifiable constant ($99/YEAR. Zero features. — Apple's Developer Program fee, which renews whether or not a release shipped), not an invented figure
 
 - [x] teardown · Login is not a screen — what "add sign-in" pulls in behind it · slug `login-is-not-a-screen` · queued 2026-09-14 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is structural (ONE SCREEN. Four systems. — resets, sessions, deletion and the store rules attached to each), not a figure
 
