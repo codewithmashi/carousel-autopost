@@ -17,8 +17,6 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 
 ## Queue
 
-- [ ] tools · Push notifications: why "just send a notification" is a delivery chain · PROOF: structural before/after — every hop between your server and a lock screen
-
 - [ ] teardown · The offline question nobody asks until the demo is on hotel wifi · PROOF: structural before/after — the same screen under two network assumptions
 
 - [ ] business · Why app review belongs in your launch date, not after it · PROOF: verifiable — review is a gate you do not control the timing of
@@ -49,6 +47,8 @@ a figure or a story. Move one up into `## Queue` once the real detail is filled 
 - receipts · Before/after of a rebuild — needs the real app and the real difference
 
 ## Done
+
+- [x] tools · Push notifications: why "just send a notification" is a delivery chain · slug `push-notifications-delivery-chain` · queued 2026-09-18 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a structural before/after (ONE CLICK. FIVE HOPS. — every hop between your server and a lock screen), not an invented figure
 
 - [x] business · What an app costs after launch, when nobody is adding features · slug `app-costs-after-launch` · queued 2026-09-16 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a verifiable constant ($99/YEAR. Zero features. — Apple's Developer Program fee, which renews whether or not a release shipped), not an invented figure
 
