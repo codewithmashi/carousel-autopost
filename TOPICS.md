@@ -17,8 +17,6 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 
 ## Queue
 
-- [ ] teardown · The offline question nobody asks until the demo is on hotel wifi · PROOF: structural before/after — the same screen under two network assumptions
-
 - [ ] business · Why app review belongs in your launch date, not after it · PROOF: verifiable — review is a gate you do not control the timing of
 
 - [ ] tools · The accounts you must own before the first line of code is written · PROOF: verifiable — developer accounts and signing identity, and what happens when the agency owns them
@@ -47,6 +45,8 @@ a figure or a story. Move one up into `## Queue` once the real detail is filled 
 - receipts · Before/after of a rebuild — needs the real app and the real difference
 
 ## Done
+
+- [x] teardown · The offline question nobody asks until the demo is on hotel wifi · slug `offline-question-hotel-wifi` · queued 2026-09-21 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a structural before/after (SAME SCREEN. Two networks. — the same screen under two network assumptions), not an invented figure
 
 - [x] tools · Push notifications: why "just send a notification" is a delivery chain · slug `push-notifications-delivery-chain` · queued 2026-09-18 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a structural before/after (ONE CLICK. FIVE HOPS. — every hop between your server and a lock screen), not an invented figure
 
