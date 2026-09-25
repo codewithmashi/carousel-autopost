@@ -17,8 +17,6 @@ before/after, or a scoping breakdown that is professional judgement rather than 
 
 ## Queue
 
-- [ ] business · Why app review belongs in your launch date, not after it · PROOF: verifiable — review is a gate you do not control the timing of
-
 - [ ] tools · The accounts you must own before the first line of code is written · PROOF: verifiable — developer accounts and signing identity, and what happens when the agency owns them
 
 - [ ] teardown · Why the design that looks right in Figma breaks on a real phone · PROOF: structural — the things a static mockup cannot show you
@@ -45,6 +43,8 @@ a figure or a story. Move one up into `## Queue` once the real detail is filled 
 - receipts · Before/after of a rebuild — needs the real app and the real difference
 
 ## Done
+
+- [x] business · Why app review belongs in your launch date, not after it · slug `app-review-belongs-in-launch-date` · queued 2026-09-25 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a structural before/after (YOUR DATE. Their clock. — no published review turnaround, and a rejection re-enters the queue), not an invented figure
 
 - [x] teardown · The offline question nobody asks until the demo is on hotel wifi · slug `offline-question-hotel-wifi` · queued 2026-09-21 for the Mon/Wed/Fri publisher; theme 03-vistto-mono; proof is a structural before/after (SAME SCREEN. Two networks. — the same screen under two network assumptions), not an invented figure
 
